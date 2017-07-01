@@ -65,7 +65,7 @@
 			this.checkBox1.AutoSize = true;
 			this.checkBox1.Location = new System.Drawing.Point(4, 4);
 			this.checkBox1.Name = "checkBox1";
-			this.checkBox1.Size = new System.Drawing.Size(88, 17);
+			this.checkBox1.Size = new System.Drawing.Size(92, 17);
 			this.checkBox1.TabIndex = 5;
 			this.checkBox1.Text = "Sandbox API";
 			this.checkBox1.UseVisualStyleBackColor = true;
@@ -82,7 +82,7 @@
 			// 
 			// saveWalletButton
 			// 
-			this.saveWalletButton.Location = new System.Drawing.Point(127, 0);
+			this.saveWalletButton.Location = new System.Drawing.Point(121, 0);
 			this.saveWalletButton.Name = "saveWalletButton";
 			this.saveWalletButton.Size = new System.Drawing.Size(75, 23);
 			this.saveWalletButton.TabIndex = 4;
@@ -94,9 +94,9 @@
 			// 
 			this.linkLabel1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.linkLabel1.AutoSize = true;
-			this.linkLabel1.Location = new System.Drawing.Point(65, 38);
+			this.linkLabel1.Location = new System.Drawing.Point(9, 38);
 			this.linkLabel1.Name = "linkLabel1";
-			this.linkLabel1.Size = new System.Drawing.Size(206, 13);
+			this.linkLabel1.Size = new System.Drawing.Size(247, 13);
 			this.linkLabel1.TabIndex = 3;
 			this.linkLabel1.TabStop = true;
 			this.linkLabel1.Text = "https://exchange.gemini.com/settings/api";
@@ -108,7 +108,7 @@
 			this.label1.Location = new System.Drawing.Point(9, 6);
 			this.label1.MaximumSize = new System.Drawing.Size(300, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(298, 26);
+			this.label1.Size = new System.Drawing.Size(289, 26);
 			this.label1.TabIndex = 2;
 			this.label1.Text = "Enter your API Key and API Secret from Gemini. This must be a newly generated key" +
     "pair.\r\n";
@@ -128,16 +128,16 @@
 			this.label3.AutoSize = true;
 			this.label3.Location = new System.Drawing.Point(9, 43);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(42, 13);
+			this.label3.Size = new System.Drawing.Size(49, 13);
 			this.label3.TabIndex = 3;
 			this.label3.Text = "Confirm";
 			// 
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(65, 1);
+			this.label6.Location = new System.Drawing.Point(9, 1);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(206, 13);
+			this.label6.Size = new System.Drawing.Size(253, 13);
 			this.label6.TabIndex = 2;
 			this.label6.Text = "AES-256 Encryption is used for API Wallet\r\n";
 			// 
@@ -146,7 +146,7 @@
 			this.label2.AutoSize = true;
 			this.label2.Location = new System.Drawing.Point(9, 20);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(53, 13);
+			this.label2.Size = new System.Drawing.Size(55, 13);
 			this.label2.TabIndex = 2;
 			this.label2.Text = "Password";
 			// 
@@ -180,7 +180,7 @@
 			this.label5.AutoSize = true;
 			this.label5.Location = new System.Drawing.Point(9, 6);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(45, 13);
+			this.label5.Size = new System.Drawing.Size(49, 13);
 			this.label5.TabIndex = 2;
 			this.label5.Text = "API Key";
 			// 
@@ -189,7 +189,7 @@
 			this.label4.AutoSize = true;
 			this.label4.Location = new System.Drawing.Point(9, 29);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(58, 13);
+			this.label4.Size = new System.Drawing.Size(67, 13);
 			this.label4.TabIndex = 2;
 			this.label4.Text = "API Secret";
 			// 
@@ -250,6 +250,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(334, 211);
 			this.Controls.Add(this.tableLayoutPanel1);
+			this.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "NewKeys";
 			this.Text = "Create New API Key Wallet";

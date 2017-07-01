@@ -27,43 +27,52 @@ namespace Libra
 					return;
 			}
 
-            /* make NewOrderRequest object */
-            var order = new Gemini.Contracts.NewOrderRequest()
-            {
-                Symbol = (cbCurrency1.Text + cbCurrency2.Text).ToLower(),
-                Amount = tbAmount.Text,
-                Price = tbPrice.Text,
-                Side = cbOrderType.Text.ToLower(),
-                Type = "exchange limit",
-                ClientOrderID = String.Format("LIBRA_{0}", Gemini.Time.TimestampMs()),
-                Options = null,
+			/* make NewOrderRequest object */
+			var order = new Gemini.Contracts.NewOrderRequest()
+			{
+				Symbol = (cbCurrency1.Text + cbCurrency2.Text).ToLower(),
+				Amount = tbAmount.Text,
+				Price = tbPrice.Text,
+				Side = cbOrderType.Text.ToLower(),
+				Type = "exchange limit",
+				ClientOrderID = String.Format("LIBRA_{0}", Gemini.Time.TimestampMs()),
+				Options = null,
 
 			};
 
 
 			try
 			{
-                if (radioButton1.Checked)
-                {
-                    OrderHandling.PendingLimit.Add(order);
-                    //var status = Gemini.GeminiClient.PlaceOrder(order);
-                    //if (status != null)
-                    //{
-                    //    MessageBox.Show(String.Format("ID: {0} Time: {1}", status.OrderID, status.Timestamp), "Order Placed!");
-                    //    this.Close();
-                    //}
-                }
-                else
-                {
-                    OrderHandling.PendingStop.Add(order);
-                    //MessageBox.Show("Placed stop order in queue", "Order Placed!");
-                }
-                this.Close();
-            }
+				if (radioButton1.Checked)
+				{
+					OrderHandling.PendingLimit.Add(order);
+					//var status = Gemini.GeminiClient.PlaceOrder(order);
+					//if (status != null)
+					//{
+					//    MessageBox.Show(String.Format("ID: {0} Time: {1}", status.OrderID, status.Timestamp), "Order Placed!");
+					//    this.Close();
+					//}
+				}
+				else
+				{
+					OrderHandling.PendingStop.Add(order);
+					//MessageBox.Show("Placed stop order in queue", "Order Placed!");
+				}
+				this.Close();
+			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message, "Exception");
 			}
+		}
+
+		public static string crts(decimal d, string currency)
+		{
+			if (currency == "BTC")
+				return Math.Round(d, 8).ToString();
+			if (currency == "ETH")
+				return Math.Round(d, 6).ToString();
+			return Math.Round(d, 2).ToString();
 		}
 
 		private void bMax_Click(object sender, EventArgs e)
@@ -77,26 +86,26 @@ namespace Libra
 					/* buy with X currency */
 					if (b.Currency == cbCurrency2.Text && cbOrderType.Text == "BUY")
 						/* remove 0.25% for fee */
-						tbTotal.Text = (b.Available * 0.9975M).ToString();
+						tbTotal.Text = crts(b.Available * 0.9975M, b.Currency);
 
 					/* sell X currency for Y */
 					if (b.Currency == cbCurrency1.Text && cbOrderType.Text == "SELL")
 						/* remove 0.25% for fee */
-						tbAmount.Text = (b.Available * 0.9975M).ToString();
+						tbAmount.Text = crts(b.Available * 0.9975M, b.Currency);
 				}
 
 			}
 			catch (Exception ex) { MessageBox.Show(ex.Message, "Exception"); }
 			try
 			{
-				var d = decimal.Parse(tbPrice.Text);
-                var amount = decimal.Parse(tbAmount.Text);
-                var total = decimal.Parse(tbTotal.Text);
-                if (cbOrderType.Text == "BUY")
-                    tbAmount.Text = (decimal.Parse(tbTotal.Text) / d).ToString();
-                else
-                    tbTotal.Text = Math.Round(amount * d, 8).ToString();
-            }
+				var price = decimal.Parse(tbPrice.Text);
+				var amount = decimal.Parse(tbAmount.Text);
+				var total = decimal.Parse(tbTotal.Text);
+				//if (cbOrderType.Text == "BUY")
+					tbAmount.Text = crts(total / price, cbCurrency1.Text);
+			//	else
+					tbTotal.Text = crts(amount * price, cbCurrency2.Text);
+			}
 			catch { }
 		}
 
@@ -108,10 +117,7 @@ namespace Libra
 				{
 					var amount = decimal.Parse(tbAmount.Text);
 					var total = decimal.Parse(tbTotal.Text);
-					if (cbCurrency1.Text == "BTC")
-						tbPrice.Text = Math.Round(total / amount, 8).ToString();
-					else
-						tbPrice.Text = Math.Round(total / amount, 6).ToString();
+					tbPrice.Text = crts(total / amount, cbCurrency1.Text);
 				}
 				catch { }
 			}
@@ -125,10 +131,7 @@ namespace Libra
 				{
 					var price = decimal.Parse(tbPrice.Text);
 					var total = decimal.Parse(tbTotal.Text);
-					if (cbCurrency1.Text == "BTC")
-						tbAmount.Text = Math.Round(total / price, 8).ToString();
-					else
-						tbAmount.Text = Math.Round(total / price, 6).ToString();
+					tbAmount.Text = crts(total / price, cbCurrency1.Text);
 				}
 				catch { }
 			}
@@ -142,10 +145,7 @@ namespace Libra
 				{
 					var price = decimal.Parse(tbPrice.Text);
 					var amount = decimal.Parse(tbAmount.Text);
-					if (cbCurrency1.Text == "BTC")
-						tbTotal.Text = Math.Round(amount * price, 8).ToString();
-					else
-						tbTotal.Text = Math.Round(amount * price, 6).ToString();
+					tbTotal.Text = crts(amount * price, cbCurrency1.Text);
 				}
 				catch { }
 			}
@@ -162,8 +162,8 @@ namespace Libra
 
 		private void cbCurrency2_SelectedIndexChanged(object sender, EventArgs e)
 		{
-		    label4.Text = "Total " + cbCurrency2.Text;
-        }
+			label4.Text = "Total " + cbCurrency2.Text;
+		}
 
 		private void bLast_Click(object sender, EventArgs e)
 		{

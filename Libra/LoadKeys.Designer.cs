@@ -81,6 +81,7 @@
 			this.Controls.Add(this.buttonUnlock);
 			this.Controls.Add(this.buttonOpen);
 			this.Controls.Add(this.tbFile);
+			this.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
