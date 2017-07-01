@@ -29,3 +29,5 @@ Libra utilizes the open source C# [Gemini Library](https://github.com/lazear/Gem
 3. Open Libra->File->Wallet->New. Paste your Key and Secret, and choose a password to encrypt them
 4. Load your "wallet" file, and start using the client!
 
+
+I claim no rights to the use of the Gemini logo, name, or any other intellectual property relating to the Gemini Trust Company, LLC. No copyright infringement has been intended. This project is completely unaffiliated with the Gemini Trust Company, LLC.
