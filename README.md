@@ -1,13 +1,12 @@
 # Libra
-### The Open Source Interface for the Gemini Exchange
+### The open source user interface for the Gemini Exchange
 
 *Donate* 12fj5Stp31SrYjtcN9T1jnXPGKUsEF92KD
 
 ![Gemini](https://winklevosscapital.com/wp-content/uploads/2015/01/gemini-logo-2.png "Gemini Logo")
 
 ## Details:
-
-Libra utilizes the open source C# [Gemini Library](https://github.com/lazear/Gemini) to communicate with the exchange. 
+Libra is a C# GUI program providing access to the Gemini Exchange API, utilizing the open source C# [Gemini Library](https://github.com/lazear/Gemini).
 
 #### _Free!_
 * Free as in beer. Free as in pizza. Free as in speech.
@@ -19,7 +18,7 @@ Libra utilizes the open source C# [Gemini Library](https://github.com/lazear/Gem
 * Gemini only allows withdrawals to whitelisted addresses, which cannot be setup via API
 * No telemetry, no automatic updates, no communicating with unknown servers.
 #### _Useful!_
-* Ability to place limit orders and psuedo-stop orders, track past orders
+* Ability to place limit orders ***and*** stop orders, something not possible with just the web interface
 * Extensible API interface
 
 ## Setup:
