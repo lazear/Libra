@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,15 +7,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LIBRA")]
-[assembly: AssemblyDescription("LIBRA is an open source Gemini Exchange Client.\n " +
-    "This is free software - FREE AS IN BEER. You should've received a copy of the source code with this binary. " +
-    "Source code is available at https://www.pleasehodl.me " +
-    "The author of this program is not affiliated with the Gemini Exchange, and they reserve all rights to their name " +
-    "and likeness.")]
+[assembly: AssemblyDescription("The open source user interface for the Gemini Exchange. This is free software. Free as in beer, free as in pizza, free as in speech.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("https://www.pleasehodl.me")]
 [assembly: AssemblyProduct("LIBRA Gemini Client")]
-[assembly: AssemblyCopyright("Copyright © 2017 - Released under the MIT License")]
+[assembly: AssemblyCopyright("Copyright © Michael Lazear 2017")]
 [assembly: AssemblyTrademark("Released under the MIT License")]
 [assembly: AssemblyCulture("")]
 
@@ -37,4 +34,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.1.*")]
+[assembly: NeutralResourcesLanguage("")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]

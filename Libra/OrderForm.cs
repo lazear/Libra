@@ -27,41 +27,39 @@ namespace Libra
 					return;
 			}
 
-			/* make NewOrderRequest object */
-			var order = new Gemini.Contracts.NewOrderRequest()
-			{
-				Symbol = (cbCurrency1.Text + cbCurrency2.Text).ToLower(),
-				Amount = tbAmount.Text,
-				Price = tbPrice.Text,
-				Side = cbOrderType.Text.ToLower(),
-				Type = "exchange limit",
+            /* make NewOrderRequest object */
+            var order = new Gemini.Contracts.NewOrderRequest()
+            {
+                Symbol = (cbCurrency1.Text + cbCurrency2.Text).ToLower(),
+                Amount = tbAmount.Text,
+                Price = tbPrice.Text,
+                Side = cbOrderType.Text.ToLower(),
+                Type = "exchange limit",
+                ClientOrderID = String.Format("LIBRA_{0}", Gemini.Time.TimestampMs()),
+                Options = null,
 
 			};
 
 
 			try
 			{
-				//var status = Gemini.GeminiClient.PlaceOrder(order);
-				GeminiOrderSide side;
-				GeminiOrderType type;
-
-				if (cbOrderType.Text == "BUY")
-					side = GeminiOrderSide.Buy;
-				else
-					side = GeminiOrderSide.Sell;
-
-				if (radioButton1.Checked)
-					type = GeminiOrderType.Limit;
-				else
-					type = GeminiOrderType.Stop;
-
-				var go = new GeminiOrder(order, side, type);
-				if (type == GeminiOrderType.Limit)
-					go.Start();
-
-				//if (status != null)
-				//MessageBox.Show(status.Timestamp, "Order Placed!");
-			}
+                if (radioButton1.Checked)
+                {
+                    OrderHandling.PendingLimit.Add(order);
+                    //var status = Gemini.GeminiClient.PlaceOrder(order);
+                    //if (status != null)
+                    //{
+                    //    MessageBox.Show(String.Format("ID: {0} Time: {1}", status.OrderID, status.Timestamp), "Order Placed!");
+                    //    this.Close();
+                    //}
+                }
+                else
+                {
+                    OrderHandling.PendingStop.Add(order);
+                    //MessageBox.Show("Placed stop order in queue", "Order Placed!");
+                }
+                this.Close();
+            }
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message, "Exception");
@@ -84,7 +82,7 @@ namespace Libra
 					/* sell X currency for Y */
 					if (b.Currency == cbCurrency1.Text && cbOrderType.Text == "SELL")
 						/* remove 0.25% for fee */
-						tbTotal.Text = (b.Available * 0.9975M).ToString();
+						tbAmount.Text = (b.Available * 0.9975M).ToString();
 				}
 
 			}
@@ -92,8 +90,13 @@ namespace Libra
 			try
 			{
 				var d = decimal.Parse(tbPrice.Text);
-				tbAmount.Text = (decimal.Parse(tbTotal.Text) / d).ToString();
-			}
+                var amount = decimal.Parse(tbAmount.Text);
+                var total = decimal.Parse(tbTotal.Text);
+                if (cbOrderType.Text == "BUY")
+                    tbAmount.Text = (decimal.Parse(tbTotal.Text) / d).ToString();
+                else
+                    tbTotal.Text = Math.Round(amount * d, 8).ToString();
+            }
 			catch { }
 		}
 
@@ -159,8 +162,8 @@ namespace Libra
 
 		private void cbCurrency2_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			label4.Text = "Total " + cbCurrency2.Text;
-		}
+		    label4.Text = "Total " + cbCurrency2.Text;
+        }
 
 		private void bLast_Click(object sender, EventArgs e)
 		{

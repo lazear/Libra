@@ -9,7 +9,9 @@ namespace Libra
 		public LoadKeys()
 		{
 			InitializeComponent();
-		}
+            tbFile.Text = (string) Properties.Settings.Default["DefaultWallet"];
+
+        }
 
 		private void buttonOpen_Click(object sender, EventArgs e)
 		{
@@ -18,8 +20,6 @@ namespace Libra
 				if (file.ShowDialog() == DialogResult.OK)
 				{
 					tbFile.Text = file.FileName;
-					Properties.Settings.Default["DefaultWallet"] = file.FileName;
-					Properties.Settings.Default.Save();
 				}
 			}
 		}
@@ -29,7 +29,10 @@ namespace Libra
 			try
 			{
 				GeminiClient.Wallet.Open(tbFile.Text, tbPassword.Text);
-				this.Close();
+                Properties.Settings.Default["DefaultWallet"] = tbFile.Text;
+                Properties.Settings.Default.Save();
+                
+                this.Close();
 			}
 			catch (System.Exception ex)
 			{
