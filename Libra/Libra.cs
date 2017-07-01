@@ -252,6 +252,12 @@ namespace Libra
 				GeminiClient.Wallet.IncreaseNonce(30);
 				return;
 			}
+			if (reason == "RateLimit")
+			{
+				//MessageBox.Show("We're going too fast... attemping to tap the brakes", "Rate Limit Hit");
+				Thread.Sleep(1000);
+				return;
+			}
 			MessageBox.Show(message, reason);
 		}
 
