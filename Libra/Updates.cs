@@ -9,8 +9,19 @@ using Gemini.Contracts;
 
 namespace Libra
 {
+
 	public partial class LibraMain
 	{
+
+		private string price_str(string currency, MarketDataEvent e)
+		{
+			if (LastTrades[currency] != null)
+			{
+				var diff = " (" + (e.Price - LastTrades[currency].Price).ToString("+0.00;-0.00") + ")";
+				return e.Price.ToString() + diff;
+			}
+			return e.Price.ToString();
+		}
 		/// <summary>
 		/// Update the connection status label with current prices
 		/// </summary>
@@ -20,21 +31,28 @@ namespace Libra
 				.Aggregate(new StringBuilder(), (sb, s) => sb.Append(String.Format("{0}: {1}  ", s.ToUpper(), LastTrades[s]?.Price)), sb => sb.ToString());
 			connectionStatusLabel.Text = String.Format("Connected: {0}   {1}", GeminiClient.Wallet.Key(), ticker);
 
-			tbBtcUsdPrice.Text = LastTrades["btcusd"]?.Price.ToString();
+			if (currency == null)
+			{
+				tbBtcUsdPrice.Text = LastTrades["btcusd"]?.Price.ToString();
+				tbEthUsdPrice.Text = LastTrades["ethusd"]?.Price.ToString();
+				tbEthBtcPrice.Text = LastTrades["ethbtc"]?.Price.ToString();
+			}
+			else if (currency == "btcusd" && LastTrades[currency].Price != e.Price)
+			{
+				tbBtcUsdPrice.Text = price_str(currency, e);
+			}
+			else if (currency == "ethbtc" && LastTrades[currency].Price != e.Price)
+			{
+				tbEthBtcPrice.Text = price_str(currency, e);
+			}
+			else if (currency == "ethusd" && LastTrades[currency].Price != e.Price)
+			{
+				tbEthUsdPrice.Text = price_str(currency, e);
+			}
+
 			tbBtcUsdVwap.Text = V["btcusd"] != 0 ? Math.Round(PV["btcusd"] / V["btcusd"], 2).ToString() : "Calculating";
-
-			tbEthUsdPrice.Text = LastTrades["ethusd"]?.Price.ToString();
 			tbEthUsdVwap.Text = V["ethusd"] != 0 ? Math.Round(PV["ethusd"] / V["ethusd"], 2).ToString() : "Calculating";
-
-			tbEthBtcPrice.Text = LastTrades["ethbtc"]?.Price.ToString();
 			tbEthBtcVwap.Text = V["ethbtc"] != 0 ? Math.Round(PV["ethbtc"] / V["ethbtc"], 4).ToString() : "Calculating";
-
-			//rtbRates.Text = "Currency Price / VWAP\n" + Symbols
-			//	.Aggregate(new StringBuilder(), 
-			//	(sb, s) => sb.Append(String.Format("{0}\t{1}\t{2}\n", 
-			//		s.ToUpper(), 
-			//		LastTrades[s]?.Price,)), 
-			//	sb => sb.ToString()); ;
 		}
 
 		/// <summary>

@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Active");
-			System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Pending");
-			System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Filled");
-			System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Cancelled");
-			System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Past");
+			System.Windows.Forms.TreeNode treeNode36 = new System.Windows.Forms.TreeNode("Active");
+			System.Windows.Forms.TreeNode treeNode37 = new System.Windows.Forms.TreeNode("Pending");
+			System.Windows.Forms.TreeNode treeNode38 = new System.Windows.Forms.TreeNode("Filled");
+			System.Windows.Forms.TreeNode treeNode39 = new System.Windows.Forms.TreeNode("Cancelled");
+			System.Windows.Forms.TreeNode treeNode40 = new System.Windows.Forms.TreeNode("Past");
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LibraMain));
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -479,22 +479,22 @@
 			this.treeOrders.BackColor = System.Drawing.SystemColors.Control;
 			this.treeOrders.Location = new System.Drawing.Point(122, 19);
 			this.treeOrders.Name = "treeOrders";
-			treeNode16.Name = "Active";
-			treeNode16.Text = "Active";
-			treeNode17.Name = "Pending";
-			treeNode17.Text = "Pending";
-			treeNode18.Name = "Filled";
-			treeNode18.Text = "Filled";
-			treeNode19.Name = "Cancelled";
-			treeNode19.Text = "Cancelled";
-			treeNode20.Name = "Past";
-			treeNode20.Text = "Past";
+			treeNode36.Name = "Active";
+			treeNode36.Text = "Active";
+			treeNode37.Name = "Pending";
+			treeNode37.Text = "Pending";
+			treeNode38.Name = "Filled";
+			treeNode38.Text = "Filled";
+			treeNode39.Name = "Cancelled";
+			treeNode39.Text = "Cancelled";
+			treeNode40.Name = "Past";
+			treeNode40.Text = "Past";
 			this.treeOrders.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode16,
-            treeNode17,
-            treeNode18,
-            treeNode19,
-            treeNode20});
+            treeNode36,
+            treeNode37,
+            treeNode38,
+            treeNode39,
+            treeNode40});
 			this.treeOrders.Size = new System.Drawing.Size(173, 171);
 			this.treeOrders.TabIndex = 9;
 			this.treeOrders.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -606,9 +606,9 @@
 			// tableLayoutPanel1
 			// 
 			this.tableLayoutPanel1.ColumnCount = 3;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.40425F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.24113F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.70922F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.69504F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.87943F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.04252F));
 			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.labelEthusdData, 0, 2);
 			this.tableLayoutPanel1.Controls.Add(this.labelEthbtcData, 0, 3);
@@ -673,7 +673,7 @@
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(68, 0);
+			this.label8.Location = new System.Drawing.Point(67, 0);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(67, 13);
 			this.label8.TabIndex = 0;
@@ -682,7 +682,7 @@
 			// label9
 			// 
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(141, 0);
+			this.label9.Location = new System.Drawing.Point(171, 0);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(55, 13);
 			this.label9.TabIndex = 0;
@@ -692,27 +692,27 @@
 			// 
 			this.tbBtcUsdPrice.BackColor = System.Drawing.SystemColors.Control;
 			this.tbBtcUsdPrice.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tbBtcUsdPrice.Location = new System.Drawing.Point(68, 24);
+			this.tbBtcUsdPrice.Location = new System.Drawing.Point(67, 24);
 			this.tbBtcUsdPrice.Name = "tbBtcUsdPrice";
 			this.tbBtcUsdPrice.ReadOnly = true;
-			this.tbBtcUsdPrice.Size = new System.Drawing.Size(67, 13);
+			this.tbBtcUsdPrice.Size = new System.Drawing.Size(98, 13);
 			this.tbBtcUsdPrice.TabIndex = 1;
 			// 
 			// tbEthUsdPrice
 			// 
 			this.tbEthUsdPrice.BackColor = System.Drawing.SystemColors.Control;
 			this.tbEthUsdPrice.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tbEthUsdPrice.Location = new System.Drawing.Point(68, 45);
+			this.tbEthUsdPrice.Location = new System.Drawing.Point(67, 45);
 			this.tbEthUsdPrice.Name = "tbEthUsdPrice";
 			this.tbEthUsdPrice.ReadOnly = true;
-			this.tbEthUsdPrice.Size = new System.Drawing.Size(67, 13);
+			this.tbEthUsdPrice.Size = new System.Drawing.Size(88, 13);
 			this.tbEthUsdPrice.TabIndex = 1;
 			// 
 			// tbBtcUsdVwap
 			// 
 			this.tbBtcUsdVwap.BackColor = System.Drawing.SystemColors.Control;
 			this.tbBtcUsdVwap.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tbBtcUsdVwap.Location = new System.Drawing.Point(141, 24);
+			this.tbBtcUsdVwap.Location = new System.Drawing.Point(171, 24);
 			this.tbBtcUsdVwap.Name = "tbBtcUsdVwap";
 			this.tbBtcUsdVwap.ReadOnly = true;
 			this.tbBtcUsdVwap.Size = new System.Drawing.Size(88, 13);
@@ -722,7 +722,7 @@
 			// 
 			this.tbEthUsdVwap.BackColor = System.Drawing.SystemColors.Control;
 			this.tbEthUsdVwap.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tbEthUsdVwap.Location = new System.Drawing.Point(141, 45);
+			this.tbEthUsdVwap.Location = new System.Drawing.Point(171, 45);
 			this.tbEthUsdVwap.Name = "tbEthUsdVwap";
 			this.tbEthUsdVwap.ReadOnly = true;
 			this.tbEthUsdVwap.Size = new System.Drawing.Size(88, 13);
@@ -732,17 +732,17 @@
 			// 
 			this.tbEthBtcPrice.BackColor = System.Drawing.SystemColors.Control;
 			this.tbEthBtcPrice.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tbEthBtcPrice.Location = new System.Drawing.Point(68, 66);
+			this.tbEthBtcPrice.Location = new System.Drawing.Point(67, 66);
 			this.tbEthBtcPrice.Name = "tbEthBtcPrice";
 			this.tbEthBtcPrice.ReadOnly = true;
-			this.tbEthBtcPrice.Size = new System.Drawing.Size(67, 13);
+			this.tbEthBtcPrice.Size = new System.Drawing.Size(88, 13);
 			this.tbEthBtcPrice.TabIndex = 1;
 			// 
 			// tbEthBtcVwap
 			// 
 			this.tbEthBtcVwap.BackColor = System.Drawing.SystemColors.Control;
 			this.tbEthBtcVwap.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tbEthBtcVwap.Location = new System.Drawing.Point(141, 66);
+			this.tbEthBtcVwap.Location = new System.Drawing.Point(171, 66);
 			this.tbEthBtcVwap.Name = "tbEthBtcVwap";
 			this.tbEthBtcVwap.ReadOnly = true;
 			this.tbEthBtcVwap.Size = new System.Drawing.Size(88, 13);
