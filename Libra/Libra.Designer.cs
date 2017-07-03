@@ -71,8 +71,8 @@
 			this.cbWithdraw = new System.Windows.Forms.ComboBox();
 			this.bNewAddress = new System.Windows.Forms.Button();
 			this.cbAddress = new System.Windows.Forms.ComboBox();
-			this.groupboxOrders = new System.Windows.Forms.GroupBox();
 			this.rtbRates = new System.Windows.Forms.RichTextBox();
+			this.groupboxOrders = new System.Windows.Forms.GroupBox();
 			this.rtbOrder = new System.Windows.Forms.RichTextBox();
 			this.treeOrders = new System.Windows.Forms.TreeView();
 			this.bCancelSelect = new System.Windows.Forms.Button();
@@ -104,7 +104,7 @@
             this.helpToolStripMenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
-			this.menuStrip.Size = new System.Drawing.Size(609, 24);
+			this.menuStrip.Size = new System.Drawing.Size(599, 24);
 			this.menuStrip.TabIndex = 0;
 			this.menuStrip.Text = "Menu Strip";
 			// 
@@ -184,9 +184,9 @@
 			this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.uptimeStatusLabel,
             this.connectionStatusLabel});
-			this.statusStrip.Location = new System.Drawing.Point(0, 389);
+			this.statusStrip.Location = new System.Drawing.Point(0, 394);
 			this.statusStrip.Name = "statusStrip";
-			this.statusStrip.Size = new System.Drawing.Size(609, 22);
+			this.statusStrip.Size = new System.Drawing.Size(599, 22);
 			this.statusStrip.TabIndex = 1;
 			this.statusStrip.Text = "statusStrip1";
 			// 
@@ -210,7 +210,7 @@
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 24);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(609, 365);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(599, 370);
 			this.flowLayoutPanel1.TabIndex = 2;
 			// 
 			// groupboxAccounts
@@ -433,23 +433,6 @@
 			this.cbAddress.Size = new System.Drawing.Size(57, 21);
 			this.cbAddress.TabIndex = 5;
 			// 
-			// groupboxOrders
-			// 
-			this.groupboxOrders.Controls.Add(this.rtbRates);
-			this.groupboxOrders.Controls.Add(this.rtbOrder);
-			this.groupboxOrders.Controls.Add(this.treeOrders);
-			this.groupboxOrders.Controls.Add(this.bCancelSelect);
-			this.groupboxOrders.Controls.Add(this.bLoadPast);
-			this.groupboxOrders.Controls.Add(this.bCancelAll);
-			this.groupboxOrders.Controls.Add(this.bCancelSession);
-			this.groupboxOrders.Controls.Add(this.bPlaceOrder);
-			this.groupboxOrders.Location = new System.Drawing.Point(3, 166);
-			this.groupboxOrders.Name = "groupboxOrders";
-			this.groupboxOrders.Size = new System.Drawing.Size(590, 196);
-			this.groupboxOrders.TabIndex = 12;
-			this.groupboxOrders.TabStop = false;
-			this.groupboxOrders.Text = "Order Management";
-			// 
 			// rtbRates
 			// 
 			this.rtbRates.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -460,6 +443,23 @@
 			this.rtbRates.Size = new System.Drawing.Size(282, 80);
 			this.rtbRates.TabIndex = 10;
 			this.rtbRates.Text = "";
+			// 
+			// groupboxOrders
+			// 
+			this.groupboxOrders.Controls.Add(this.rtbOrder);
+			this.groupboxOrders.Controls.Add(this.treeOrders);
+			this.groupboxOrders.Controls.Add(this.bCancelSelect);
+			this.groupboxOrders.Controls.Add(this.rtbRates);
+			this.groupboxOrders.Controls.Add(this.bLoadPast);
+			this.groupboxOrders.Controls.Add(this.bCancelAll);
+			this.groupboxOrders.Controls.Add(this.bCancelSession);
+			this.groupboxOrders.Controls.Add(this.bPlaceOrder);
+			this.groupboxOrders.Location = new System.Drawing.Point(3, 166);
+			this.groupboxOrders.Name = "groupboxOrders";
+			this.groupboxOrders.Size = new System.Drawing.Size(590, 196);
+			this.groupboxOrders.TabIndex = 12;
+			this.groupboxOrders.TabStop = false;
+			this.groupboxOrders.Text = "Order Management";
 			// 
 			// rtbOrder
 			// 
@@ -605,7 +605,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(609, 411);
+			this.ClientSize = new System.Drawing.Size(599, 416);
 			this.Controls.Add(this.flowLayoutPanel1);
 			this.Controls.Add(this.statusStrip);
 			this.Controls.Add(this.menuStrip);

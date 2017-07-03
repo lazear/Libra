@@ -18,8 +18,7 @@ namespace Libra
 	{
 		private System.Windows.Forms.Timer runtime = new System.Windows.Forms.Timer();
 		private System.Windows.Forms.Timer accounts = new System.Windows.Forms.Timer();
-		public static Dictionary<string, decimal> ExchangeRates = new Dictionary<string, decimal>
-			{ { "btcusd", 0M }, { "ethusd", 0M }, { "ethbtc", 0M }, };
+
 
 		public LibraMain()
 		{
@@ -29,35 +28,34 @@ namespace Libra
 			/* Callback for API errors */
 			GeminiClient.InstallErrorHandler(ErrorHandler);
 
-			BackgroundWorker worker = new BackgroundWorker();
-			worker.WorkerReportsProgress = true;
-			worker.ProgressChanged += OrderStatusChange;
-			worker.DoWork += CheckPendingOrders;
-
-			/* Update runtime every second, as well as check for order updates */
+			/* Update runtime clock every second  */
 			runtime.Tick += UpdateRuntime;
-			runtime.Tick += delegate (object s, EventArgs e) { if (!worker.IsBusy) worker.RunWorkerAsync(); };
-			runtime.Interval = (int) Properties.Settings.Default["RefreshRate"];
+			runtime.Interval = 1000;
 			runtime.Start();
 
 
-			/* Update account balance and prices every 5 seconds */
-			accounts.Tick += UpdateAccounts;
-			accounts.Tick += UpdatePrices;
-			accounts.Interval = 5000;
-			accounts.Start();
-
 			/* Also update account balance whenever API Keys are loaded */
 			GeminiClient.Wallet.OnChange += UpdateAccounts;
-			GeminiClient.Wallet.OnChange += LoadActiveOrders;
+			GeminiClient.Wallet.OnChange += OrderEventStart;
 			GeminiClient.Wallet.OnChange += delegate(object sender, EventArgs e) { labelAddress.Text = GeminiClient.Wallet.Key(); };
+
+
+			InitialPrices();
+			MarketDataStart();
+
+			PriceChanged += UpdateTicker;
+			OrderChanged += UpdateOrders;
+			UpdateTicker(null, null);
 		}
+
+
+
 
 		public void UpdatePastOrders(object state, ProgressChangedEventArgs e)
 		{
 			PastTrade status = e.UserState as PastTrade;
 			treeOrders.Nodes["Past"].Nodes.Add(status.OrderID, status.OrderID);
-			OrderHandling.Past.Add(status);
+		//	OrderTracker.Orders.Add(status);
 			
 		}
 
@@ -74,176 +72,6 @@ namespace Libra
 		}
 
 
-		/// <summary>
-		/// If there are open orders from a previous session, load them
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		public void LoadActiveOrders(object sender, EventArgs e)
-		{
-			var orders = GeminiClient.GetActiveOrders();
-			foreach (var order in orders)
-			{
-				OrderHandling.Active.Add(order);
-				treeOrders.Nodes["Active"].Nodes.Add(order.ClientOrderID, order.OrderID);
-			}
-
-		}
-
-		/// <summary>
-		/// Update status strip with runtime and current prices
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void UpdateRuntime(object sender, EventArgs e)
-		{
-			string[] symbols = { "btcusd", "ethusd", "ethbtc" };
-			var uptime = DateTime.Now - System.Diagnostics.Process.GetCurrentProcess().StartTime;
-			uptimeStatusLabel.Text = TimeSpan.FromSeconds(Math.Round(uptime.TotalSeconds, 0)).ToString();
-
-			var ex = symbols.Aggregate(new StringBuilder(),
-					(sb, s) => sb.Append(String.Format("{0}: {1}  ", s.ToUpper(), ExchangeRates[s])),
-					(sb) => sb.ToString());
-
-			connectionStatusLabel.Text = String.Format("Connected: {0}     {1}", GeminiClient.Wallet.Key(), ex);
-		}
-
-		/// <summary>
-		/// Fetch currenct exchange prices
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void UpdatePrices(object sender, EventArgs e)
-		{
-			string[] symbols = { "btcusd", "ethusd", "ethbtc" };
-			Parallel.ForEach(symbols, async symbol =>
-			{
-				Requests re = new Requests(GeminiClient.Wallet.Url() + "/v1/pubticker/" + symbol);
-				var res = await re.Get();
-				if (res.IsSuccessStatusCode)
-					ExchangeRates[symbol] = res.Json<Gemini.Contracts.Ticker>().Last;
-
-			});
-
-			var ex2 = symbols.Aggregate(new StringBuilder(),
-				(sb, s) => sb.Append(String.Format("{0}: {1}\n", s.ToUpper(), ExchangeRates[s])),
-				(sb) => sb.ToString());
-			rtbRates.Text = ex2;
-		}
-
-		/// <summary>
-		/// Callback for when an order is placed, or status has changed
-		/// </summary>
-		/// <param name="state"></param>
-		/// <param name="e"></param>
-		private void OrderStatusChange(object state, ProgressChangedEventArgs e)
-		{
-			OrderStatus status = e.UserState as OrderStatus;
-			var exist = treeOrders.Nodes.Find(status.ClientOrderID, true);
-			if (exist.Count() > 0)
-			{
-				if (status.Type != "stop")
-					exist.First().Remove();
-				else
-					return;
-			}
-			if (status.Type == "stop")
-			{
-				treeOrders.Nodes["Pending"].Nodes.Add(status.ClientOrderID, status.ClientOrderID);
-				return;
-			}
-
-			if (status.IsLive)
-			{
-				treeOrders.Nodes["Active"].Nodes.Add(status.ClientOrderID, status.OrderID);
-				OrderHandling.Active.Add(status);
-				activeOrdersToolStripMenuItem.Text = OrderHandling.Active.Count + " active orders";
-			}
-			else if (status.IsCancelled)
-			{
-				treeOrders.Nodes["Cancelled"].Nodes.Add(status.ClientOrderID, status.OrderID);
-				OrderHandling.Cancelled.Add(status);
-			}
-			else
-			{
-				treeOrders.Nodes["Completed"].Nodes.Add(status.ClientOrderID, status.OrderID);
-				OrderHandling.Completed.Add(status);
-			}
-
-		}
-
-		/// <summary>
-		/// Check all orders in the pending order queue, and execute them 
-		/// if the condition has been met
-		/// </summary>
-		/// <param name="state"></param>
-		/// <param name="e"></param>
-		private void CheckPendingOrders(object state, EventArgs e)
-		{
-			Parallel.ForEach(OrderHandling.PendingStop, order =>
-			{
-				var price = decimal.Parse(order.Price);
-				if (order.Side == "buy")
-				{
-					/* If currenct price is above the stop-buy price, execute */
-					if (price <= ExchangeRates[order.Symbol])
-					{
-						order.Price = (ExchangeRates[order.Symbol] + 1.0M).ToString();
-						var status = GeminiClient.PlaceOrder(order);
-						OrderHandling.PendingStop.Remove(order);
-						((BackgroundWorker)state).ReportProgress(0, status);
-					}
-					else
-					{
-						((BackgroundWorker)state).ReportProgress(0, new OrderStatus()
-						{
-							Type = "stop",
-							ClientOrderID = order.ClientOrderID,
-						});
-					}
-				}
-				else
-				{
-					/* if curenct price is below the stop-loss price, execute */
-					if (price >= ExchangeRates[order.Symbol])
-					{
-						/* Decrease by 10, since this is still viewed as a limit order
-							* by the server, and this increases our chances of getting filled */
-						order.Price = (ExchangeRates[order.Symbol] - 10M).ToString();
-						var status = GeminiClient.PlaceOrder(order);
-						OrderHandling.PendingStop.Remove(order);
-						/* Report back that we've placed an order */
-						((BackgroundWorker)state).ReportProgress(0, status);
-					}
-					else
-					{
-						((BackgroundWorker)state).ReportProgress(0, new OrderStatus()
-						{
-							Type = "stop",
-							ClientOrderID = order.ClientOrderID,
-						});
-					}
-				}
-			});
-
-			Parallel.ForEach(OrderHandling.PendingLimit, order =>
-			{
-				OrderHandling.PendingLimit.Remove(order);
-				((BackgroundWorker)state).ReportProgress(0, GeminiClient.PlaceOrder(order));
-			});
-
-			Parallel.ForEach(OrderHandling.Active, order =>
-			{
-				var status = GeminiClient.GetOrder(int.Parse(order.OrderID));
-				if (!status.IsLive)
-				{
-					OrderHandling.Active.Remove(order);
-					(state as BackgroundWorker).ReportProgress(0, status);
-				}
-
-			});
-
-		}
 
 		private void ErrorHandler(string reason, string message)
 		{
@@ -254,45 +82,10 @@ namespace Libra
 			}
 			if (reason == "RateLimit")
 			{
-				//MessageBox.Show("We're going too fast... attemping to tap the brakes", "Rate Limit Hit");
-				Thread.Sleep(1000);
+				MessageBox.Show("We're going too fast... attemping to tap the brakes", "Rate Limit Hit");
 				return;
 			}
 			MessageBox.Show(message, reason);
-		}
-
-
-		/// <summary>
-		/// Thread for updating runtime, checking prices, and watching for stop order triggers
-		/// </summary>
-		private void UpdateAccounts(object sender, EventArgs e)
-		{
-			string[] symbols = { "btcusd", "ethusd", "ethbtc" };
-			try
-			{
-				var assets = 0.0M;
-				var balances = GeminiClient.GetBalances();
-				foreach (var balance in balances)
-				{
-					switch (balance.Currency)
-					{
-						case "BTC":
-							textboxBtcBalance.Text = balance.Amount.ToString();
-							assets += balance.Amount * ExchangeRates["btcusd"];
-							break;
-						case "ETH":
-							textboxEthBalance.Text = balance.Amount.ToString();
-							assets += balance.Amount * ExchangeRates["ethusd"];
-							break;
-						case "USD":
-							textboxUsdBalance.Text = balance.Amount.ToString();
-							assets += balance.Amount;
-							break;
-					}
-				}
-				labelAssetValue.Text = String.Format("Total Value: ${0}", Math.Round(assets, 2));
-			}
-			catch { };
 		}
 
 		/// <summary>
@@ -311,7 +104,7 @@ namespace Libra
 
 			if (selected.Parent.Name == "Pending")
 			{
-				var status = OrderHandling.PendingStop.Find((x) => x.ClientOrderID == selected.Name);
+				var status = OrderTracker.Pending.Find((x) => x.ClientOrderID == selected.Name);
 				rtbOrder.Text = String.Format("Pending Stop order\n{0} {1} {2} @ {3}",
 					status.Side.ToUpper(),
 					status.Amount,
@@ -322,15 +115,7 @@ namespace Libra
 			{
 				try
 				{
-					OrderStatus status = null;
-					if (selected.Parent.Text == "Completed")
-						status = OrderHandling.Completed.Find((x) => x.OrderID == selected.Text);
-					else if (selected.Parent.Text == "Active")
-						status = OrderHandling.Active.Find((x) => x.OrderID == selected.Text);
-					else if (selected.Parent.Text == "Cancelled")
-						status = OrderHandling.Cancelled.Find((x) => x.OrderID == selected.Text);
-					else
-						status = GeminiClient.GetOrder(int.Parse(selected.Text));
+					OrderEvent status = OrderTracker.Orders.Find((x) => x.OrderID == selected.Text); 
 
 					var side = (status.Side == "buy") ? "Buy" : "Sell";
 
@@ -362,11 +147,12 @@ namespace Libra
 					rtbOrder.AppendText(String.Format("\nExecuted: {0} {1} @ {2}\nTotal: {3} / {4}", 
 						status.ExecutedAmount, c1, eprice, total, expected));
 
-					if (selected.Parent.Text == "Past")
-					{
-						var pt = OrderHandling.Past.Find((x) => x.OrderID == selected.Text);
-						rtbOrder.AppendText(String.Format("\nFee: {0} {1}", OrderForm.crts(pt.FeeAmount, pt.FeeCurrency), pt.FeeCurrency));
-					}
+					
+					//if (selected.Parent.Text == "Past")
+					//{
+					//	var pt = OrderTracker.Past.Find((x) => x.OrderID == selected.Text);
+					//	rtbOrder.AppendText(String.Format("\nFee: {0} {1}", OrderForm.crts(pt.FeeAmount, pt.FeeCurrency), pt.FeeCurrency));
+					//}
 				} catch {}
 
 			}
@@ -470,9 +256,8 @@ namespace Libra
 					if (MessageBox.Show("Confirm cancellation of order " + node, "Cancel Order", MessageBoxButtons.YesNo) == DialogResult.No)
 						return;
 				}
-				OrderHandling.PendingStop.Remove(OrderHandling.PendingStop.Find((x) => x.ClientOrderID == node));
+				OrderTracker.Pending.Remove(OrderTracker.Pending.Find((x) => x.ClientOrderID == node));
 				selected.Remove();
-				treeOrders.Nodes["Cancelled"].Nodes.Add(selected);
 			}
 
 			/* Order is on the books */
@@ -483,16 +268,10 @@ namespace Libra
 					if (MessageBox.Show("Confirm cancellation of order " + node, "Cancel Order", MessageBoxButtons.YesNo) == DialogResult.No)
 						return;
 				}
-				var status = OrderHandling.Active.Find((x) => x.OrderID == selected.Text);
-				var res = GeminiClient.CancelOrder(int.Parse(status.OrderID));
+				var res = GeminiClient.CancelOrder(int.Parse(selected.Text));
 
 				if (res.IsCancelled)
-				{
 					selected.Remove();
-					treeOrders.Nodes["Cancelled"].Nodes.Add(selected);
-
-					OrderHandling.Active.Remove(status);
-				}
 			}
 		}
 
@@ -534,9 +313,6 @@ namespace Libra
 		{
 			if (this.WindowState == FormWindowState.Minimized)
 			{
-				//notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
-				//notifyIcon.BalloonTipText = "Libra running in background";
-				//notifyIcon.BalloonTipTitle = "Libra";
 				notifyIcon.ShowBalloonTip(50);
 				this.Hide();
 			}
@@ -549,26 +325,5 @@ namespace Libra
 		}
 	}
 
-	public class OrderHandling
-	{
-		private static OrderHandling instance;
 
-		public static List<NewOrderRequest> PendingStop = new List<NewOrderRequest>();
-		public static List<NewOrderRequest> PendingLimit = new List<NewOrderRequest>();
-		public static List<OrderStatus> Active = new List<OrderStatus>();
-		public static List<OrderStatus> Cancelled = new List<OrderStatus>();
-		public static List<OrderStatus> Completed = new List<OrderStatus>();
-		public static List<PastTrade> Past = new List<PastTrade>();
-
-		private OrderHandling() { }
-		public static OrderHandling Instance
-		{
-			get
-			{
-				if (instance == null)
-					instance = new OrderHandling();
-				return instance;
-			}
-		}
-	}
 }

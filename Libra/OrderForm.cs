@@ -40,23 +40,15 @@ namespace Libra
 
 			};
 
-
 			try
 			{
-				if (radioButton1.Checked)
+				if (radioLimit.Checked)
 				{
-					OrderHandling.PendingLimit.Add(order);
-					//var status = Gemini.GeminiClient.PlaceOrder(order);
-					//if (status != null)
-					//{
-					//    MessageBox.Show(String.Format("ID: {0} Time: {1}", status.OrderID, status.Timestamp), "Order Placed!");
-					//    this.Close();
-					//}
+					Gemini.GeminiClient.PlaceOrder(order);
 				}
 				else
 				{
-					OrderHandling.PendingStop.Add(order);
-					//MessageBox.Show("Placed stop order in queue", "Order Placed!");
+					OrderTracker.Pending.Add(order);
 				}
 				this.Close();
 			}
@@ -66,6 +58,12 @@ namespace Libra
 			}
 		}
 
+		/// <summary>
+		/// currency round and convert to string
+		/// </summary>
+		/// <param name="d"></param>
+		/// <param name="currency"></param>
+		/// <returns></returns>
 		public static string crts(decimal d, string currency)
 		{
 			if (currency == "BTC")
