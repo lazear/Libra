@@ -16,7 +16,7 @@ namespace Libra
 		private static OrderTracker instance;
 
 		public static List<NewOrderRequest> Pending = new List<NewOrderRequest>();
-		public static List<OrderEvent> Orders = new List<OrderEvent>();
+		public static Dictionary<string, OrderEvent> Orders = new Dictionary<string, OrderEvent> ();
 
 		private OrderTracker() { }
 
@@ -40,6 +40,7 @@ namespace Libra
 		{
 			Parallel.ForEach(Pending, order =>
 			{
+				
 				var price = decimal.Parse(order.Price);
 				if (order.Symbol == currency)
 				{

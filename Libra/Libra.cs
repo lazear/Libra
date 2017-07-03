@@ -44,8 +44,9 @@ namespace Libra
 			MarketDataStart();
 
 			PriceChanged += UpdateTicker;
+			PriceChanged += OrderTracker.CheckPendingOrders;
 			OrderChanged += UpdateOrders;
-			UpdateTicker(null, null);
+			//UpdateTicker(null, null);
 		}
 
 
@@ -115,7 +116,7 @@ namespace Libra
 			{
 				try
 				{
-					OrderEvent status = OrderTracker.Orders.Find((x) => x.OrderID == selected.Text); 
+					OrderEvent status = OrderTracker.Orders[selected.Text];
 
 					var side = (status.Side == "buy") ? "Buy" : "Sell";
 
@@ -130,7 +131,7 @@ namespace Libra
 					else
 						price += " " + c2;
 
-					var eprice = status.Price.ToString();
+					var eprice = status.AvgExecutionPrice.ToString();
 					if (c2 == "USD")
 						eprice = "$" + eprice;
 					else

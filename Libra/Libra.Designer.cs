@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Active");
-			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Pending");
-			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Completed");
-			System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Cancelled");
-			System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Past");
+			System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Active");
+			System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Pending");
+			System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Filled");
+			System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Cancelled");
+			System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Past");
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LibraMain));
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,7 +71,6 @@
 			this.cbWithdraw = new System.Windows.Forms.ComboBox();
 			this.bNewAddress = new System.Windows.Forms.Button();
 			this.cbAddress = new System.Windows.Forms.ComboBox();
-			this.rtbRates = new System.Windows.Forms.RichTextBox();
 			this.groupboxOrders = new System.Windows.Forms.GroupBox();
 			this.rtbOrder = new System.Windows.Forms.RichTextBox();
 			this.treeOrders = new System.Windows.Forms.TreeView();
@@ -87,6 +86,19 @@
 			this.placeOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.label1 = new System.Windows.Forms.Label();
+			this.labelBtcusdData = new System.Windows.Forms.Label();
+			this.labelEthusdData = new System.Windows.Forms.Label();
+			this.labelEthbtcData = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.tbBtcUsdPrice = new System.Windows.Forms.TextBox();
+			this.tbEthUsdPrice = new System.Windows.Forms.TextBox();
+			this.tbBtcUsdVwap = new System.Windows.Forms.TextBox();
+			this.tbEthUsdVwap = new System.Windows.Forms.TextBox();
+			this.tbEthBtcPrice = new System.Windows.Forms.TextBox();
+			this.tbEthBtcVwap = new System.Windows.Forms.TextBox();
 			this.menuStrip.SuspendLayout();
 			this.statusStrip.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -94,6 +106,7 @@
 			this.groupboxTransactions.SuspendLayout();
 			this.groupboxOrders.SuspendLayout();
 			this.notifyMenu.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip
@@ -433,23 +446,12 @@
 			this.cbAddress.Size = new System.Drawing.Size(57, 21);
 			this.cbAddress.TabIndex = 5;
 			// 
-			// rtbRates
-			// 
-			this.rtbRates.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.rtbRates.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.rtbRates.Location = new System.Drawing.Point(302, 106);
-			this.rtbRates.Name = "rtbRates";
-			this.rtbRates.ReadOnly = true;
-			this.rtbRates.Size = new System.Drawing.Size(282, 80);
-			this.rtbRates.TabIndex = 10;
-			this.rtbRates.Text = "";
-			// 
 			// groupboxOrders
 			// 
+			this.groupboxOrders.Controls.Add(this.tableLayoutPanel1);
 			this.groupboxOrders.Controls.Add(this.rtbOrder);
 			this.groupboxOrders.Controls.Add(this.treeOrders);
 			this.groupboxOrders.Controls.Add(this.bCancelSelect);
-			this.groupboxOrders.Controls.Add(this.rtbRates);
 			this.groupboxOrders.Controls.Add(this.bLoadPast);
 			this.groupboxOrders.Controls.Add(this.bCancelAll);
 			this.groupboxOrders.Controls.Add(this.bCancelSession);
@@ -477,22 +479,22 @@
 			this.treeOrders.BackColor = System.Drawing.SystemColors.Control;
 			this.treeOrders.Location = new System.Drawing.Point(122, 19);
 			this.treeOrders.Name = "treeOrders";
-			treeNode1.Name = "Active";
-			treeNode1.Text = "Active";
-			treeNode2.Name = "Pending";
-			treeNode2.Text = "Pending";
-			treeNode3.Name = "Completed";
-			treeNode3.Text = "Completed";
-			treeNode4.Name = "Cancelled";
-			treeNode4.Text = "Cancelled";
-			treeNode5.Name = "Past";
-			treeNode5.Text = "Past";
+			treeNode16.Name = "Active";
+			treeNode16.Text = "Active";
+			treeNode17.Name = "Pending";
+			treeNode17.Text = "Pending";
+			treeNode18.Name = "Filled";
+			treeNode18.Text = "Filled";
+			treeNode19.Name = "Cancelled";
+			treeNode19.Text = "Cancelled";
+			treeNode20.Name = "Past";
+			treeNode20.Text = "Past";
 			this.treeOrders.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5});
+            treeNode16,
+            treeNode17,
+            treeNode18,
+            treeNode19,
+            treeNode20});
 			this.treeOrders.Size = new System.Drawing.Size(173, 171);
 			this.treeOrders.TabIndex = 9;
 			this.treeOrders.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -601,6 +603,151 @@
 			this.exitToolStripMenuItem1.Text = "Exit";
 			this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 3;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.40425F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.24113F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.70922F));
+			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.labelEthusdData, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this.labelEthbtcData, 0, 3);
+			this.tableLayoutPanel1.Controls.Add(this.label8, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.label9, 2, 0);
+			this.tableLayoutPanel1.Controls.Add(this.tbBtcUsdPrice, 1, 1);
+			this.tableLayoutPanel1.Controls.Add(this.tbEthUsdPrice, 1, 2);
+			this.tableLayoutPanel1.Controls.Add(this.tbBtcUsdVwap, 2, 1);
+			this.tableLayoutPanel1.Controls.Add(this.tbEthUsdVwap, 2, 2);
+			this.tableLayoutPanel1.Controls.Add(this.tbEthBtcPrice, 1, 3);
+			this.tableLayoutPanel1.Controls.Add(this.tbEthBtcVwap, 2, 3);
+			this.tableLayoutPanel1.Controls.Add(this.labelBtcusdData, 0, 1);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(302, 106);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 4;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(282, 84);
+			this.tableLayoutPanel1.TabIndex = 11;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(3, 0);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(55, 13);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "Currency";
+			// 
+			// labelBtcusdData
+			// 
+			this.labelBtcusdData.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.labelBtcusdData.AutoSize = true;
+			this.labelBtcusdData.Location = new System.Drawing.Point(3, 25);
+			this.labelBtcusdData.Name = "labelBtcusdData";
+			this.labelBtcusdData.Size = new System.Drawing.Size(49, 13);
+			this.labelBtcusdData.TabIndex = 0;
+			this.labelBtcusdData.Text = "BTC/USD";
+			// 
+			// labelEthusdData
+			// 
+			this.labelEthusdData.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.labelEthusdData.AutoSize = true;
+			this.labelEthusdData.Location = new System.Drawing.Point(3, 46);
+			this.labelEthusdData.Name = "labelEthusdData";
+			this.labelEthusdData.Size = new System.Drawing.Size(49, 13);
+			this.labelEthusdData.TabIndex = 0;
+			this.labelEthusdData.Text = "ETH/USD";
+			// 
+			// labelEthbtcData
+			// 
+			this.labelEthbtcData.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.labelEthbtcData.AutoSize = true;
+			this.labelEthbtcData.Location = new System.Drawing.Point(3, 67);
+			this.labelEthbtcData.Name = "labelEthbtcData";
+			this.labelEthbtcData.Size = new System.Drawing.Size(49, 13);
+			this.labelEthbtcData.TabIndex = 0;
+			this.labelEthbtcData.Text = "ETH/BTC";
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(68, 0);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(67, 13);
+			this.label8.TabIndex = 0;
+			this.label8.Text = "Last Price";
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Location = new System.Drawing.Point(141, 0);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(55, 13);
+			this.label9.TabIndex = 0;
+			this.label9.Text = "VWAP(24)";
+			// 
+			// tbBtcUsdPrice
+			// 
+			this.tbBtcUsdPrice.BackColor = System.Drawing.SystemColors.Control;
+			this.tbBtcUsdPrice.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tbBtcUsdPrice.Location = new System.Drawing.Point(68, 24);
+			this.tbBtcUsdPrice.Name = "tbBtcUsdPrice";
+			this.tbBtcUsdPrice.ReadOnly = true;
+			this.tbBtcUsdPrice.Size = new System.Drawing.Size(67, 13);
+			this.tbBtcUsdPrice.TabIndex = 1;
+			// 
+			// tbEthUsdPrice
+			// 
+			this.tbEthUsdPrice.BackColor = System.Drawing.SystemColors.Control;
+			this.tbEthUsdPrice.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tbEthUsdPrice.Location = new System.Drawing.Point(68, 45);
+			this.tbEthUsdPrice.Name = "tbEthUsdPrice";
+			this.tbEthUsdPrice.ReadOnly = true;
+			this.tbEthUsdPrice.Size = new System.Drawing.Size(67, 13);
+			this.tbEthUsdPrice.TabIndex = 1;
+			// 
+			// tbBtcUsdVwap
+			// 
+			this.tbBtcUsdVwap.BackColor = System.Drawing.SystemColors.Control;
+			this.tbBtcUsdVwap.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tbBtcUsdVwap.Location = new System.Drawing.Point(141, 24);
+			this.tbBtcUsdVwap.Name = "tbBtcUsdVwap";
+			this.tbBtcUsdVwap.ReadOnly = true;
+			this.tbBtcUsdVwap.Size = new System.Drawing.Size(88, 13);
+			this.tbBtcUsdVwap.TabIndex = 1;
+			// 
+			// tbEthUsdVwap
+			// 
+			this.tbEthUsdVwap.BackColor = System.Drawing.SystemColors.Control;
+			this.tbEthUsdVwap.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tbEthUsdVwap.Location = new System.Drawing.Point(141, 45);
+			this.tbEthUsdVwap.Name = "tbEthUsdVwap";
+			this.tbEthUsdVwap.ReadOnly = true;
+			this.tbEthUsdVwap.Size = new System.Drawing.Size(88, 13);
+			this.tbEthUsdVwap.TabIndex = 1;
+			// 
+			// tbEthBtcPrice
+			// 
+			this.tbEthBtcPrice.BackColor = System.Drawing.SystemColors.Control;
+			this.tbEthBtcPrice.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tbEthBtcPrice.Location = new System.Drawing.Point(68, 66);
+			this.tbEthBtcPrice.Name = "tbEthBtcPrice";
+			this.tbEthBtcPrice.ReadOnly = true;
+			this.tbEthBtcPrice.Size = new System.Drawing.Size(67, 13);
+			this.tbEthBtcPrice.TabIndex = 1;
+			// 
+			// tbEthBtcVwap
+			// 
+			this.tbEthBtcVwap.BackColor = System.Drawing.SystemColors.Control;
+			this.tbEthBtcVwap.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tbEthBtcVwap.Location = new System.Drawing.Point(141, 66);
+			this.tbEthBtcVwap.Name = "tbEthBtcVwap";
+			this.tbEthBtcVwap.ReadOnly = true;
+			this.tbEthBtcVwap.Size = new System.Drawing.Size(88, 13);
+			this.tbEthBtcVwap.TabIndex = 1;
+			// 
 			// LibraMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -626,6 +773,8 @@
 			this.groupboxTransactions.PerformLayout();
 			this.groupboxOrders.ResumeLayout(false);
 			this.notifyMenu.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -684,7 +833,19 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem activeOrdersToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem placeOrderToolStripMenuItem;
-		private System.Windows.Forms.RichTextBox rtbRates;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label labelBtcusdData;
+		private System.Windows.Forms.Label labelEthusdData;
+		private System.Windows.Forms.Label labelEthbtcData;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.TextBox tbBtcUsdPrice;
+		private System.Windows.Forms.TextBox tbEthUsdPrice;
+		private System.Windows.Forms.TextBox tbBtcUsdVwap;
+		private System.Windows.Forms.TextBox tbEthUsdVwap;
+		private System.Windows.Forms.TextBox tbEthBtcPrice;
+		private System.Windows.Forms.TextBox tbEthBtcVwap;
 	}
 }
 
