@@ -24,18 +24,19 @@ namespace Libra
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default["RefreshRate"] = (int)this.refreshRateUpDown.Value;
             Properties.Settings.Default["RequireConfirmations"] = checkConfirm.CheckState.Equals(CheckState.Checked);
             Properties.Settings.Default["DefaultWallet"] = walletTextBox.Text;
-            Properties.Settings.Default.Save();
+			Properties.Settings.Default["DefaultLogFile"] = logTextBox.Text;
+			Properties.Settings.Default.Save();
+			this.Close();
         }
 
         private void Settings_Load(object sender, EventArgs e)
         {
-            refreshRateUpDown.Value = (int)Properties.Settings.Default["RefreshRate"];
-            walletTextBox.Text = (string)Properties.Settings.Default["DefaultWallet"];
 
-            if ((bool)Properties.Settings.Default["RequireConfirmations"])
+            walletTextBox.Text = (string)Properties.Settings.Default["DefaultWallet"];
+			logTextBox.Text = (string)Properties.Settings.Default["DefaultLogFile"];
+			if ((bool)Properties.Settings.Default["RequireConfirmations"])
                 checkConfirm.CheckState = CheckState.Checked;
             else
                 checkConfirm.CheckState = CheckState.Unchecked;
@@ -57,5 +58,17 @@ namespace Libra
         {
             this.Close();
         }
-    }
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			using (var file = new OpenFileDialog())
+			{
+				if (file.ShowDialog() == DialogResult.OK)
+				{
+					logTextBox.Text = file.FileName;
+				}
+			}
+		}
+
+	}
 }

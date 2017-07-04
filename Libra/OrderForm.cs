@@ -55,6 +55,7 @@ namespace Libra
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message, "Exception");
+				Logger.WriteException(Logger.Level.Error, ex);
 			}
 		}
 

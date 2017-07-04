@@ -73,13 +73,13 @@ namespace Libra.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public int RefreshRate {
+        [global::System.Configuration.DefaultSettingValueAttribute("libra_log.txt")]
+        public string DefaultLogFile {
             get {
-                return ((int)(this["RefreshRate"]));
+                return ((string)(this["DefaultLogFile"]));
             }
             set {
-                this["RefreshRate"] = value;
+                this["DefaultLogFile"] = value;
             }
         }
     }

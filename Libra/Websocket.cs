@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using Gemini;
 using Gemini.Contracts;
 
@@ -45,8 +46,6 @@ namespace Libra
 					PV[s] = vwap[0];
 					V[s] = vwap[1];
 				}).Start();
-			
-
 			});
 
 			UpdateTicker(null, null);
@@ -76,7 +75,8 @@ namespace Libra
 					v += trade.Amount;
 				}
 				timestamp = history[0].Timestamp;
-			} while (history.Length > 10 && (timestamp < end));
+			} while (history.Length > 10 && (end - timestamp) > 10);
+
 			// add to the cumulative variables
 			return new decimal[] { pv, v};
 		}
@@ -85,7 +85,7 @@ namespace Libra
 		{
 			foreach (var currency in Symbols)
 			{
-				initial[currency] = false;
+				initial[currency] = true;
 				var ws = new Gemini.Websocket("wss://api.gemini.com/v1/marketdata/" + currency.ToUpper(), MarketDataCallback, currency);
 				ws.Connect();
 			}
@@ -113,14 +113,19 @@ namespace Libra
 				ws.AddHeader("X-GEMINI-PAYLOAD", re.Headers["X-GEMINI-PAYLOAD"]);
 				ws.AddHeader("X-GEMINI-SIGNATURE", re.Headers["X-GEMINI-SIGNATURE"]);
 				ws.Connect();
-			} catch { System.Windows.Forms.MessageBox.Show("Error opening websocket for order events"); }
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteException(Logger.Level.Error, ex);
+				System.Windows.Forms.MessageBox.Show(ex.Message, "Error opening websocket");
+			}
 		}
 
 		private void MarketDataCallback(string data, object state)
 		{
 			
 			string currency = (string)state;
-
+			
 			if (initial[currency])
 			{
 				initial[currency] = false;
@@ -129,6 +134,7 @@ namespace Libra
 			try
 			{
 				var market = data.Json<MarketData>();
+				
 				if (market.Type == "update")
 				{
 					foreach (MarketDataEvent e in market.Events)
@@ -137,7 +143,7 @@ namespace Libra
 						{
 							if (LastTrades[currency].Price != e.Price)
 								PriceChanged?.Invoke(currency, e);
-
+							
 							LastTrades[currency] = e;
 							PV[currency] += e.Price * e.Amount;
 							V[currency] += e.Amount;
@@ -145,70 +151,62 @@ namespace Libra
 					}
 				}
 			}
-			catch { }
+			catch (Exception e) { Logger.WriteException(Logger.Level.Error, e);  }
 
 		}
 
 		static bool ack = true;
 		static long LastHeartbeat = 0;
-		System.IO.Stream s = new System.IO.FileStream("log", System.IO.FileMode.Create, System.IO.FileAccess.Write);
-		System.IO.Stream s2 = new System.IO.FileStream("log2", System.IO.FileMode.Create, System.IO.FileAccess.Write);
+
 		private void OrderEventCallback(string data, object state)
 		{
-
-			s.Write(Encoding.UTF8.GetBytes(data + "\n"), 0, data.Length + 1);
-
-			if (data.Contains("\"type\":\"subscription_ack\""))
-			{
-				return;
-			}
-
+			/* This is likely caused by the serialization code below, and will be caught 
+			 * by Gemini.Websocket in the Receive() loop. If we end up here, the Websocket
+			 * connection is dead */
 			if (data == "Exception")
 			{
-				System.Windows.Forms.MessageBox.Show((state as Exception).Message);
-
 				var e = state as Exception;
-
-				s.Write(Encoding.UTF8.GetBytes(e.Message), 0, e.Message.Length);
-				s.Write(Encoding.UTF8.GetBytes(e.StackTrace), 0, e.StackTrace.Length);
+				Logger.WriteException(Logger.Level.Fatal, e);
 				return;
 			}
-			
-			if (data.Contains("heartbeat"))
+
+			var pattern = "\"type\":\"\\w+\"";
+			var match = Regex.Match(data, pattern).Value;
+
+			switch(match)
 			{
-				LastHeartbeat = data.Json<Heartbeat>().TimestampMs;
-				return;
+				case "\"type\":\"subscription_ack\"":
+					return;
+				case "\"type\":\"heartbeat\"":
+					LastHeartbeat = data.Json<Heartbeat>().TimestampMs;
+					return;
+				default:
+					break;
 			}
-
+	
 
 			/* The default C# json parser is not good at mixed objects, and Gemini occasionally will send different
 			 * OrderEvent objects at the same time. So we need to do a big of regex to parse out what is what */
 			foreach (var item in data.TrimStart('[', '{').TrimEnd(']').Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries))
 			{
 				string clean = "{" + item + "}";
-				s2.Write(Encoding.UTF8.GetBytes(clean + "\n"), 0, clean.Length + 1);
-				 
-				if (clean.Contains("\"type\":\"fill\""))
+				match = Regex.Match(clean, pattern).Value;
+				//System.Windows.Forms.MessageBox.Show(match);
+				switch(match)
 				{
-					//clean = clean;// + "}";
-					OrderChanged?.Invoke("fill", clean.Json<OrderEventFilled>());
+					case "\"type\":\"fill\"":
+						OrderChanged?.Invoke("fill", clean.Json<OrderEventFilled>());
+						break;
+					case "\"type\":\"cancelled\"":
+					case "\"type\":\"cancel_rejected\"":
+						OrderChanged?.Invoke("cancelled", clean.Json<OrderEventCancelled>());
+						break;
+					default:
+						var obj = clean.Json<OrderEvent>();
+						OrderChanged?.Invoke(obj.Type, obj);
+						break;
 				}
-
-				else if (clean.Contains("\"type\":\"cancelled\"") || data.Contains("\"type\":\"cancel_rejected\""))
-				{
-					OrderChanged?.Invoke("cancelled", clean.Json<OrderEventCancelled>());
-				}
-				else
-				{
-					var obj = clean.Json<OrderEvent>();
-					OrderChanged?.Invoke(obj.Type, obj);
-				}
-
 			}
-
-
-
-
 		}
 	}
 }

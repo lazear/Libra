@@ -14,8 +14,8 @@
     <Setting Name="ApiSandbox" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://api.sandbox.gemini.com</Value>
     </Setting>
-    <Setting Name="RefreshRate" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">3</Value>
+    <Setting Name="DefaultLogFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">libra_log.txt</Value>
     </Setting>
   </Settings>
 </SettingsFile>

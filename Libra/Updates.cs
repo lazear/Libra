@@ -28,7 +28,7 @@ namespace Libra
 		private void UpdateTicker(string currency, MarketDataEvent e)
 		{
 			var ticker = Symbols
-				.Aggregate(new StringBuilder(), (sb, s) => sb.Append(String.Format("{0}: {1}  ", s.ToUpper(), LastTrades[s]?.Price)), sb => sb.ToString());
+				.Aggregate(new StringBuilder(), (sb, s) => sb.Append(String.Format("{0}: {1}  ", s.ToUpper(), s == currency ? e.Price : LastTrades[s]?.Price)), sb => sb.ToString());
 			connectionStatusLabel.Text = String.Format("Connected: {0}   {1}", GeminiClient.Wallet.Key(), ticker);
 
 			if (currency == null)
@@ -37,15 +37,15 @@ namespace Libra
 				tbEthUsdPrice.Text = LastTrades["ethusd"]?.Price.ToString();
 				tbEthBtcPrice.Text = LastTrades["ethbtc"]?.Price.ToString();
 			}
-			else if (currency == "btcusd" && LastTrades[currency].Price != e.Price)
+			else if (currency == "btcusd")
 			{
 				tbBtcUsdPrice.Text = price_str(currency, e);
 			}
-			else if (currency == "ethbtc" && LastTrades[currency].Price != e.Price)
+			else if (currency == "ethbtc")
 			{
 				tbEthBtcPrice.Text = price_str(currency, e);
 			}
-			else if (currency == "ethusd" && LastTrades[currency].Price != e.Price)
+			else if (currency == "ethusd")
 			{
 				tbEthUsdPrice.Text = price_str(currency, e);
 			}
@@ -120,7 +120,6 @@ namespace Libra
 		{
 			
 			var order = (OrderEvent)data;
-			
 			
 			if (type == "closed")
 			{

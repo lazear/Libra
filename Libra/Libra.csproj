@@ -106,6 +106,7 @@
     <Compile Include="LoadKeys.Designer.cs">
       <DependentUpon>LoadKeys.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logger.cs" />
     <Compile Include="NewKeys.cs">
       <SubType>Form</SubType>
     </Compile>
