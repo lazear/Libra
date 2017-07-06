@@ -122,17 +122,26 @@ namespace Libra
 			var order = (OrderEvent)data;
 			
 			if (type == "closed")
-			{
-				//order = (OrderEventFilled)data;
-				OrderTracker.Orders[order.OrderID] = order;
-				treeOrders.Nodes["Filled"].Nodes.Add(order.OrderID, order.OrderID);
-				//treeOrders.Nodes["Active"].Nodes.Find(order.OrderID, false)?.First()?.Remove();
+            {
+                TreeNode[] found;
+                if ((found = treeOrders.Nodes.Find(order.OrderID, true)).Count() > 0)
+                    found.First().Remove();
+
+                OrderTracker.Orders[order.OrderID] = order;
+                if (order.IsCancelled)
+                {
+                    treeOrders.Nodes["Cancelled"].Nodes.Add(order.OrderID, order.OrderID);
+                }
+                else if (order.ExecutedAmount == order.OriginalAmount)
+                {
+                    treeOrders.Nodes["Filled"].Nodes.Add(order.OrderID, order.OrderID);
+                }
+				    
 			}
 			else if (type == "cancelled")
 			{
 				order = (OrderEventCancelled)data;
-				treeOrders.Nodes["Cancelled"].Nodes.Add(order.OrderID, order.OrderID);
-				//treeOrders.Nodes["Active"].Nodes.Find(order.OrderID, false)?.First()?.Remove();
+				//treeOrders.Nodes["Cancelled"].Nodes.Add(order.OrderID, order.OrderID);
 				
 			}
 			else if (type == "booked" || type == "initial")
@@ -143,16 +152,16 @@ namespace Libra
 			else if (type == "filled")
 			{
 				order = (OrderEventFilled)data;
-				//OrderTracker.Orders[order.OrderID].RemainingAmount = order.RemainingAmount;
 				OrderTracker.Orders[order.OrderID] = order;
-				//System.Windows.Forms.MessageBox.Show(type);
 			}
 
 
 			foreach (var n in OrderTracker.Pending)
 			{
-				//treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false)?.First()?.Remove();
-				treeOrders.Nodes["Pending"].Nodes.Add(n.ClientOrderID, n.ClientOrderID);
+                //treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false)?.First()?.Remove();
+                if (treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false).Count() > 0)
+                    treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false).First().Remove();
+                treeOrders.Nodes["Pending"].Nodes.Add(n.ClientOrderID, n.ClientOrderID);
 			}
 
 			UpdateAccounts(null, null);
