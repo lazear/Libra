@@ -16,7 +16,7 @@ namespace Libra
 	public class Logger
 	{
 		private static Logger instance;
-		public static FileStream File;
+		public static FileStream File = new FileStream((string)Properties.Settings.Default["DefaultLogFile"], FileMode.Create, FileAccess.Write);
 		public static string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
 		public enum Level { Info, Debug, Warning, Error, Fatal };
@@ -26,7 +26,7 @@ namespace Libra
 			var output = String.Format("{0} [{1}] {2}\n",
 				DateTime.Now.ToString(DateTimeFormat), Enum.GetName(typeof(Level), level), text);
 			if (File == null || !File.CanWrite)
-				throw new LoggerException(String.Format("{0} cannot be accessed", File.Name));
+				throw new LoggerException("Log file cannot be accessed");
 
 			File.Write(Encoding.UTF8.GetBytes(output), 0, output.Length);
 			File.Flush();
@@ -35,13 +35,12 @@ namespace Libra
 
 		public static void WriteException(Level level, Exception e)
 		{
-			Write(level, e.Message + "\n" + e.StackTrace);
+			Write(level, e.Message + "\nStack Trace:" + e.StackTrace);
 		}
 
 		public Logger()
 		{
-			if (File == null)
-				File = new FileStream((string)Properties.Settings.Default["DefaultLogFile"], FileMode.Append, FileAccess.ReadWrite);
+
 		}
 
 		public static Logger Instance

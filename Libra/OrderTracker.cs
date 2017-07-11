@@ -49,7 +49,9 @@ namespace Libra
 						/* If currenct price is above the stop-buy price, execute */
 						if (price <= data.Price)
 						{
-							order.Price = (data.Price + 1.0M).ToString();
+							order.Price = (data.Price + 0.01M).ToString();
+							order.ClientOrderID += "STOP";
+							order.Options = new string[] { "immediate-or-cancel" };
 							GeminiClient.PlaceOrder(order);
 							Pending.Remove(order);
 						}
@@ -61,7 +63,8 @@ namespace Libra
 						{
 							/* Decrease by 10, since this is still viewed as a limit order
 							* by the server, and this increases our chances of getting filled */
-							order.Price = (data.Price - 10M).ToString();
+							order.Price = (data.Price - 0.01M).ToString();
+							order.ClientOrderID += "STOP";
 							GeminiClient.PlaceOrder(order);
 							Pending.Remove(order);
 						}

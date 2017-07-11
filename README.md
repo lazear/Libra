@@ -28,5 +28,10 @@ Libra is a C# GUI program providing access to the Gemini Exchange API, utilizing
 3. Open Libra->File->Wallet->New. Paste your Key and Secret, and choose a password to encrypt them
 4. Load your "wallet" file, and start using the client!
 
+## Compiling from source
+Linux/Mac: Install the open source [Mono framework](http://www.mono-project.com)
+1. Clone the [Gemini Library](https://github.com/lazear/Gemini) and Libra into the same parent directory
+2. Windows: use Visual Studio or MSBuild to compile Gemini and then Libra
+3. Linux/Mac: Use `xbuild /p:Configuration=Release` on Gemini and then Libra. Use `mono Libra.exe` to run the application
 
 I claim no rights to the use of the Gemini logo, name, or any other intellectual property relating to the Gemini Trust Company, LLC. No copyright infringement has been intended. This project is completely unaffiliated with the Gemini Trust Company, LLC.

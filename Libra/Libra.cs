@@ -39,24 +39,22 @@ namespace Libra
 			GeminiClient.Wallet.OnChange += OrderEventStart;
 			GeminiClient.Wallet.OnChange += delegate(object sender, EventArgs e) { labelAddress.Text = GeminiClient.Wallet.Key(); };
 
-
+			/* Initialize Websockets */
 			InitialPrices();
 			MarketDataStart();
-
+			
+			/* Websocket PriceChanged event handles ticker data and pending Stop orders */
 			PriceChanged += UpdateTicker;
 			PriceChanged += OrderTracker.CheckPendingOrders;
+
+			/* Websocket OrderChanged event */
 			OrderChanged += UpdateOrders;
-			//UpdateTicker(null, null);
 		}
-
-
-
 
 		public void UpdatePastOrders(object state, ProgressChangedEventArgs e)
 		{
 			PastTrade status = e.UserState as PastTrade;
 			treeOrders.Nodes["Past"].Nodes.Add(status.OrderID, status.OrderID);
-		//	OrderTracker.Orders.Add(status);
 			
 		}
 
@@ -71,8 +69,6 @@ namespace Libra
 
 			};
 		}
-
-
 
 		private void ErrorHandler(string reason, string message)
 		{
@@ -138,8 +134,6 @@ namespace Libra
 						eprice += " " + c2;
 
 					var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(status.TimestampMs);
-					//timestamp.AddSeconds((double) status.TimestampMs);
-
 					var total = OrderForm.crts(status.ExecutedAmount * status.AvgExecutionPrice, c2) + " " + c2;
 					var expected = OrderForm.crts(status.OriginalAmount * status.Price, c2) + " " + c2;
 
@@ -148,13 +142,11 @@ namespace Libra
 					rtbOrder.AppendText(String.Format("\nExecuted: {0} {1} @ {2}\nTotal: {3} / {4}", 
 						status.ExecutedAmount, c1, eprice, total, expected));
 
-					
-					//if (selected.Parent.Text == "Past")
-					//{
-					//	var pt = OrderTracker.Past.Find((x) => x.OrderID == selected.Text);
-					//	rtbOrder.AppendText(String.Format("\nFee: {0} {1}", OrderForm.crts(pt.FeeAmount, pt.FeeCurrency), pt.FeeCurrency));
-					//}
-				} catch {}
+				}
+				catch (Exception ex)
+				{
+					Logger.WriteException(Logger.Level.Error, ex);
+				}
 
 			}
 		}
@@ -244,6 +236,8 @@ namespace Libra
 		/// <param name="e"></param>
 		private void bCancelSelect_Click(object sender, EventArgs e)
 		{
+			if (treeOrders.SelectedNode == null)
+				return;
 			if (treeOrders.SelectedNode?.Level == 0)
 				return;
 			var node = treeOrders.SelectedNode.Name;
@@ -269,10 +263,15 @@ namespace Libra
 					if (MessageBox.Show("Confirm cancellation of order " + node, "Cancel Order", MessageBoxButtons.YesNo) == DialogResult.No)
 						return;
 				}
-				var res = GeminiClient.CancelOrder(int.Parse(selected.Text));
-
-				if (res.IsCancelled)
-					selected.Remove();
+				try
+				{
+					var res = GeminiClient.CancelOrder(int.Parse(selected.Text));
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+					Logger.WriteException(Logger.Level.Error, ex);
+				}
 			}
 		}
 
@@ -284,7 +283,16 @@ namespace Libra
 				if (MessageBox.Show("Confirm cancellation of all orders", "Cancel Order", MessageBoxButtons.YesNo) == DialogResult.No)
 					return;
 			}
-			GeminiClient.CancelAll();
+			try
+			{
+				GeminiClient.CancelAll();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+				Logger.WriteException(Logger.Level.Error, ex);
+			}
+
 		}
 
 		private void bCancelSession_Click(object sender, EventArgs e)
@@ -294,7 +302,16 @@ namespace Libra
 				if (MessageBox.Show("Confirm cancellation of session orders", "Cancel Order", MessageBoxButtons.YesNo) == DialogResult.No)
 					return;
 			}
-			GeminiClient.CancelSession();
+			try
+			{
+				GeminiClient.CancelSession();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+				Logger.WriteException(Logger.Level.Error, ex);
+			}
+			
 		}
 
 		private void bLoadPast_Click(object sender, EventArgs e)

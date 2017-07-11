@@ -9,10 +9,8 @@ using Gemini.Contracts;
 
 namespace Libra
 {
-
 	public partial class LibraMain
 	{
-
 		private string price_str(string currency, MarketDataEvent e)
 		{
 			if (LastTrades[currency] != null)
@@ -107,9 +105,11 @@ namespace Libra
 				}
 				labelAssetValue.Text = String.Format("Total Value: ${0}", Math.Round(assets, 2));
 			}
-			catch { };
+			catch (Exception ex)
+			{
+				Logger.WriteException(Logger.Level.Error, ex);
+			}
 		}
-
 
 		/// <summary>
 		/// Callback for when an order is placed, or status has changed
@@ -118,17 +118,22 @@ namespace Libra
 		/// <param name="e"></param>
 		private void UpdateOrders(string type, object data)
 		{
-			
+			if (type == "PENDING")
+			{
+
+			}
+
 			var order = (OrderEvent)data;
-			
+			TreeNode[] found;
+
 			if (type == "closed")
             {
-                TreeNode[] found;
+              
                 if ((found = treeOrders.Nodes.Find(order.OrderID, true)).Count() > 0)
                     found.First().Remove();
 
                 OrderTracker.Orders[order.OrderID] = order;
-                if (order.IsCancelled)
+                if (order.IsCancelled && !order.ClientOrderID.Contains("STOP"))
                 {
                     treeOrders.Nodes["Cancelled"].Nodes.Add(order.OrderID, order.OrderID);
                 }
@@ -140,12 +145,35 @@ namespace Libra
 			}
 			else if (type == "cancelled")
 			{
-				order = (OrderEventCancelled)data;
-				//treeOrders.Nodes["Cancelled"].Nodes.Add(order.OrderID, order.OrderID);
-				
+				var cancel = (OrderEventCancelled)data;
+
+				/* 
+				 * Our stop orders are placed as immediate or cancel. 
+				 * We will resubmit it at a slightly worse price, and try again until it succeeds 
+				 */
+				if (cancel.RemainingAmount > 0 && cancel.ClientOrderID.Contains("STOP"))
+				{
+					var request = new NewOrderRequest()
+					{
+						Side = order.Side,
+						Price = Math.Round((cancel.Side == "buy" ? cancel.Price + .01M : cancel.Price - 0.01M), 2).ToString(),
+						Options = new string[] { "immediate-or-cancel" },
+						Symbol = cancel.Symbol,
+						Amount = Math.Round(cancel.RemainingAmount, 8).ToString(),
+						ClientOrderID = String.Format("LIBRA_{0}STOP", DateTime.Now.ToTimestampMs()),
+						Type = "exchange limit",
+					};
+					GeminiClient.PlaceOrder(request);
+				}
+
+
 			}
 			else if (type == "booked" || type == "initial")
 			{
+				// Remove existing node
+				if ((found = treeOrders.Nodes["Pending"].Nodes.Find(order.ClientOrderID, false)).Count() > 0)
+					found.First().Remove();
+
 				treeOrders.Nodes["Active"].Nodes.Add(order.OrderID, order.OrderID);
 				OrderTracker.Orders[order.OrderID] = order;
 			}
@@ -158,20 +186,12 @@ namespace Libra
 
 			foreach (var n in OrderTracker.Pending)
 			{
-                //treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false)?.First()?.Remove();
-                if (treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false).Count() > 0)
-                    treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false).First().Remove();
-                treeOrders.Nodes["Pending"].Nodes.Add(n.ClientOrderID, n.ClientOrderID);
+				if ((found = treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false)).Count() > 0)
+					found.First().Remove();
+				treeOrders.Nodes["Pending"].Nodes.Add(n.ClientOrderID, n.ClientOrderID);
 			}
 
 			UpdateAccounts(null, null);
 		}
-
-		private void UpdatePending(NewOrderRequest n)
-		{
-			
-		}
-
-
 	}
 }
