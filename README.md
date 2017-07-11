@@ -5,7 +5,7 @@ Donations:
 * BTC 12fj5Stp31SrYjtcN9T1jnXPGKUsEF92KD
 * ETH 0x2189b1E5C719093AbEFC1BE926fD92d23f4C52Fd
 
-![Libra](https://www.pleasehodl.me/wp-content/uploads/2017/07/shutterstock_380912410.jpg "Justice is blind")
+<img src="https://www.pleasehodl.me/wp-content/uploads/2017/07/shutterstock_380912410.jpg" width="600"/>
 
 ## Details:
 Libra is a C# GUI program providing access to the Gemini Exchange API, utilizing the open source C# [Gemini Library](https://github.com/lazear/Gemini).
