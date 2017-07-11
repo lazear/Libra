@@ -1,9 +1,11 @@
 # Libra
 ### The open source user interface for the Gemini Exchange
 
-*Donate* 12fj5Stp31SrYjtcN9T1jnXPGKUsEF92KD
+Donations:
+* BTC 12fj5Stp31SrYjtcN9T1jnXPGKUsEF92KD
+* ETH 0x2189b1E5C719093AbEFC1BE926fD92d23f4C52Fd
 
-![Gemini](https://winklevosscapital.com/wp-content/uploads/2015/01/gemini-logo-2.png "Gemini Logo")
+![Libra](https://www.pleasehodl.me/wp-content/uploads/2017/07/shutterstock_380912410.jpg "Justice is blind")
 
 ## Details:
 Libra is a C# GUI program providing access to the Gemini Exchange API, utilizing the open source C# [Gemini Library](https://github.com/lazear/Gemini).
