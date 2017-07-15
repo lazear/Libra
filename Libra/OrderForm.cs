@@ -19,21 +19,42 @@ namespace Libra
 
 		private void bSubmit_Click(object sender, EventArgs e)
 		{
+
+			/* make NewOrderRequest object 
+			 * We can only sell/buy ETHBTC, not BTCETH, etc
+			 * so need to convert to the proper setting
+			 * 
+			 * buy btc with eth is really sell ETHBTC
+			 * buy eth with btc is buy ETHBTC
+			 * sell btc for eth is buy ETHBTC
+			 * sell eth for btc is sell ETHBTC
+			 */
+
+			string side = cbOrderType.Text.ToLower();
+			string symbol = (cbCurrency1.Text + cbCurrency2.Text).ToLower();
+			if (symbol == "btceth")
+			{
+				symbol = "ethbtc";
+				if (side == "buy")
+					side = "sell";
+				else
+					side = "buy";
+			}
+
 			if ((bool)Properties.Settings.Default["RequireConfirmations"])
 			{
 				string confirm = String.Format("You are about to place an order to {0} {1} {2} for {3} {4}.\nYou can turn off confirmations in Settings.",
-					cbOrderType.Text, tbAmount.Text, cbCurrency1.Text, tbPrice.Text, cbCurrency2.Text);
+					side, tbAmount.Text, cbCurrency1.Text, tbTotal.Text, cbCurrency2.Text);
 				if (MessageBox.Show(confirm, "Confirm order", MessageBoxButtons.OKCancel) != DialogResult.OK)
 					return;
 			}
 
-			/* make NewOrderRequest object */
 			var order = new Gemini.Contracts.NewOrderRequest()
 			{
-				Symbol = (cbCurrency1.Text + cbCurrency2.Text).ToLower(),
+				Symbol = symbol,
 				Amount = tbAmount.Text,
 				Price = tbPrice.Text,
-				Side = cbOrderType.Text.ToLower(),
+				Side = side,
 				Type = "exchange limit",
 				ClientOrderID = String.Format("LIBRA_{0}", Gemini.Time.TimestampMs()),
 				Options = null,
@@ -168,11 +189,9 @@ namespace Libra
 		{
 			string[] currencies = { "btcusd", "ethusd", "ethbtc" };
 			string lookup = "";
-			bool invert = false;
 			if (cbCurrency1.Text == "BTC" && cbCurrency2.Text == "ETH")
 			{
 				lookup = "ethbtc";
-				invert = true;
 			}
 			else
 			{
@@ -182,8 +201,6 @@ namespace Libra
 			try
 			{
 				var currentPrice = Gemini.GeminiClient.GetLastPrice(lookup);
-				if (invert)
-					currentPrice = 1 / currentPrice;
 				tbPrice.Text = currentPrice.ToString();
 			}
 			catch { }

@@ -30,10 +30,13 @@
         {
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-			this.buttonCancel = new System.Windows.Forms.Button();
 			this.buttonApply = new System.Windows.Forms.Button();
+			this.buttonCancel = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.buttonLogFile = new System.Windows.Forms.Button();
+			this.logTextBox = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.checkAdvanced = new System.Windows.Forms.CheckBox();
 			this.gbAdvanced = new System.Windows.Forms.GroupBox();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
@@ -41,9 +44,6 @@
 			this.buttonWallet = new System.Windows.Forms.Button();
 			this.walletTextBox = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.buttonLogFile = new System.Windows.Forms.Button();
-			this.logTextBox = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -61,17 +61,6 @@
 			this.flowLayoutPanel1.Size = new System.Drawing.Size(328, 30);
 			this.flowLayoutPanel1.TabIndex = 2;
 			// 
-			// buttonCancel
-			// 
-			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(84, 3);
-			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-			this.buttonCancel.TabIndex = 1;
-			this.buttonCancel.Text = "Cancel";
-			this.buttonCancel.UseVisualStyleBackColor = true;
-			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-			// 
 			// buttonApply
 			// 
 			this.buttonApply.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -82,6 +71,17 @@
 			this.buttonApply.Text = "Apply";
 			this.buttonApply.UseVisualStyleBackColor = true;
 			this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+			// 
+			// buttonCancel
+			// 
+			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.buttonCancel.Location = new System.Drawing.Point(84, 3);
+			this.buttonCancel.Name = "buttonCancel";
+			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+			this.buttonCancel.TabIndex = 1;
+			this.buttonCancel.Text = "Cancel";
+			this.buttonCancel.UseVisualStyleBackColor = true;
+			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
 			// 
 			// tableLayoutPanel1
 			// 
@@ -118,6 +118,32 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(328, 166);
 			this.panel1.TabIndex = 3;
+			// 
+			// buttonLogFile
+			// 
+			this.buttonLogFile.Location = new System.Drawing.Point(259, 59);
+			this.buttonLogFile.Name = "buttonLogFile";
+			this.buttonLogFile.Size = new System.Drawing.Size(55, 26);
+			this.buttonLogFile.TabIndex = 14;
+			this.buttonLogFile.Text = "Select";
+			this.buttonLogFile.UseVisualStyleBackColor = true;
+			this.buttonLogFile.Click += new System.EventHandler(this.button1_Click);
+			// 
+			// logTextBox
+			// 
+			this.logTextBox.Location = new System.Drawing.Point(17, 63);
+			this.logTextBox.Name = "logTextBox";
+			this.logTextBox.Size = new System.Drawing.Size(236, 20);
+			this.logTextBox.TabIndex = 13;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(14, 46);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(103, 13);
+			this.label1.TabIndex = 12;
+			this.label1.Text = "Default log file";
 			// 
 			// checkAdvanced
 			// 
@@ -170,6 +196,7 @@
 			this.buttonWallet.TabIndex = 9;
 			this.buttonWallet.Text = "Select";
 			this.buttonWallet.UseVisualStyleBackColor = true;
+			this.buttonWallet.Click += new System.EventHandler(this.buttonWallet_Click);
 			// 
 			// walletTextBox
 			// 
@@ -186,32 +213,6 @@
 			this.label2.Size = new System.Drawing.Size(145, 13);
 			this.label2.TabIndex = 7;
 			this.label2.Text = "Default API wallet file";
-			// 
-			// buttonLogFile
-			// 
-			this.buttonLogFile.Location = new System.Drawing.Point(259, 59);
-			this.buttonLogFile.Name = "buttonLogFile";
-			this.buttonLogFile.Size = new System.Drawing.Size(55, 26);
-			this.buttonLogFile.TabIndex = 14;
-			this.buttonLogFile.Text = "Select";
-			this.buttonLogFile.UseVisualStyleBackColor = true;
-			this.buttonLogFile.Click += new System.EventHandler(this.button1_Click);
-			// 
-			// logTextBox
-			// 
-			this.logTextBox.Location = new System.Drawing.Point(17, 63);
-			this.logTextBox.Name = "logTextBox";
-			this.logTextBox.Size = new System.Drawing.Size(236, 20);
-			this.logTextBox.TabIndex = 13;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(14, 46);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(103, 13);
-			this.label1.TabIndex = 12;
-			this.label1.Text = "Default log file";
 			// 
 			// Settings
 			// 

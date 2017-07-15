@@ -38,14 +38,26 @@ namespace Libra
 			else if (currency == "btcusd")
 			{
 				tbBtcUsdPrice.Text = price_str(currency, e);
+				if (e.Price - LastTrades[currency].Price > 0)
+					tbBtcUsdPrice.ForeColor = System.Drawing.Color.Green;
+				else
+					tbBtcUsdPrice.ForeColor = System.Drawing.Color.Red;
 			}
 			else if (currency == "ethbtc")
 			{
 				tbEthBtcPrice.Text = price_str(currency, e);
+				if (e.Price - LastTrades[currency].Price > 0)
+					tbEthBtcPrice.ForeColor = System.Drawing.Color.Green;
+				else
+					tbEthBtcPrice.ForeColor = System.Drawing.Color.Red;
 			}
 			else if (currency == "ethusd")
 			{
 				tbEthUsdPrice.Text = price_str(currency, e);
+				if (e.Price - LastTrades[currency].Price > 0)
+					tbEthUsdPrice.ForeColor = System.Drawing.Color.Green;
+				else
+					tbEthUsdPrice.ForeColor = System.Drawing.Color.Red;
 			}
 
 			tbBtcUsdVwap.Text = V["btcusd"] != 0 ? Math.Round(PV["btcusd"] / V["btcusd"], 2).ToString() : "Calculating";
@@ -69,7 +81,7 @@ namespace Libra
 				if ((DateTime.UtcNow.ToTimestampMs() - LastHeartbeat) > 6000)
 				{
 					MessageBox.Show(String.Format("Last heartbeat received {0} ms ago!", (DateTime.UtcNow.ToTimestampMs() - LastHeartbeat)));
-					OrderEventStart(null, null);
+				//	OrderEventStart(null, null);
 					LastHeartbeat = 0;
 				}
 					
@@ -133,10 +145,13 @@ namespace Libra
                     found.First().Remove();
 
                 OrderTracker.Orders[order.OrderID] = order;
-                if (order.IsCancelled && !order.ClientOrderID.Contains("STOP"))
+                if (order.IsCancelled)
                 {
-                    treeOrders.Nodes["Cancelled"].Nodes.Add(order.OrderID, order.OrderID);
-                }
+					if (order.ClientOrderID == null)
+						treeOrders.Nodes["Cancelled"].Nodes.Add(order.OrderID, order.OrderID);
+					else if (!order.ClientOrderID.Contains("STOP"))
+						treeOrders.Nodes["Cancelled"].Nodes.Add(order.OrderID, order.OrderID);
+				}
                 else if (order.ExecutedAmount == order.OriginalAmount)
                 {
                     treeOrders.Nodes["Filled"].Nodes.Add(order.OrderID, order.OrderID);
@@ -151,19 +166,22 @@ namespace Libra
 				 * Our stop orders are placed as immediate or cancel. 
 				 * We will resubmit it at a slightly worse price, and try again until it succeeds 
 				 */
-				if (cancel.RemainingAmount > 0 && cancel.ClientOrderID.Contains("STOP"))
+				if (cancel.RemainingAmount > 0 && cancel.ClientOrderID != null)
 				{
-					var request = new NewOrderRequest()
+					if(cancel.ClientOrderID.Contains("STOP"))
 					{
-						Side = order.Side,
-						Price = Math.Round((cancel.Side == "buy" ? cancel.Price + .01M : cancel.Price - 0.01M), 2).ToString(),
-						Options = new string[] { "immediate-or-cancel" },
-						Symbol = cancel.Symbol,
-						Amount = Math.Round(cancel.RemainingAmount, 8).ToString(),
-						ClientOrderID = String.Format("LIBRA_{0}STOP", DateTime.Now.ToTimestampMs()),
-						Type = "exchange limit",
-					};
-					GeminiClient.PlaceOrder(request);
+						var request = new NewOrderRequest()
+						{
+							Side = order.Side,
+							Price = Math.Round((cancel.Side == "buy" ? cancel.Price + .01M : cancel.Price - 0.01M), 2).ToString(),
+							Options = new string[] { "immediate-or-cancel" },
+							Symbol = cancel.Symbol,
+							Amount = Math.Round(cancel.RemainingAmount, 8).ToString(),
+							ClientOrderID = String.Format("LIBRA_{0}STOP", DateTime.Now.ToTimestampMs()),
+							Type = "exchange limit",
+						};
+						GeminiClient.PlaceOrder(request);
+					}
 				}
 
 

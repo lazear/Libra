@@ -188,7 +188,14 @@ namespace Libra
 		/// <param name="e"></param>
 		public void Exit(object sender, EventArgs e)
 		{
-			GeminiClient.Wallet.Close();
+			try
+			{
+				foreach (var ws in sockets)
+					ws.rc = null;
+				GeminiClient.Wallet.Close();
+			}
+			 catch { }
+
 		}
 
 

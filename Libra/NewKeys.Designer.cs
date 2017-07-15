@@ -153,7 +153,7 @@
 			// confirmTextBox
 			// 
 			this.confirmTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.confirmTextBox.Location = new System.Drawing.Point(68, 40);
+			this.confirmTextBox.Location = new System.Drawing.Point(93, 40);
 			this.confirmTextBox.Name = "confirmTextBox";
 			this.confirmTextBox.Size = new System.Drawing.Size(226, 20);
 			this.confirmTextBox.TabIndex = 1;
@@ -161,7 +161,7 @@
 			// 
 			// passwordTextBox
 			// 
-			this.passwordTextBox.Location = new System.Drawing.Point(68, 17);
+			this.passwordTextBox.Location = new System.Drawing.Point(93, 17);
 			this.passwordTextBox.Name = "passwordTextBox";
 			this.passwordTextBox.Size = new System.Drawing.Size(226, 20);
 			this.passwordTextBox.TabIndex = 0;
@@ -170,7 +170,7 @@
 			// apiSecretTextBox
 			// 
 			this.apiSecretTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.apiSecretTextBox.Location = new System.Drawing.Point(68, 26);
+			this.apiSecretTextBox.Location = new System.Drawing.Point(93, 26);
 			this.apiSecretTextBox.Name = "apiSecretTextBox";
 			this.apiSecretTextBox.Size = new System.Drawing.Size(226, 20);
 			this.apiSecretTextBox.TabIndex = 2;
@@ -195,7 +195,7 @@
 			// 
 			// apiKeyTextBox
 			// 
-			this.apiKeyTextBox.Location = new System.Drawing.Point(68, 3);
+			this.apiKeyTextBox.Location = new System.Drawing.Point(93, 3);
 			this.apiKeyTextBox.Name = "apiKeyTextBox";
 			this.apiKeyTextBox.Size = new System.Drawing.Size(226, 20);
 			this.apiKeyTextBox.TabIndex = 1;

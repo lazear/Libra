@@ -25,6 +25,7 @@ namespace Libra
 
 		public PriceChangedDel PriceChanged;
 		public OrderChangedDel OrderChanged;
+		public List<Websocket> sockets = new List<Websocket>();
 
 		/// <summary>
 		/// Seed the last trade dictionary
@@ -88,6 +89,7 @@ namespace Libra
 				initial[currency] = true;
 				var ws = new Gemini.Websocket("wss://api.gemini.com/v1/marketdata/" + currency.ToUpper(), MarketDataCallback, currency);
 				ws.Connect();
+				sockets.Add(ws);
 			}
 			
 		}
@@ -113,6 +115,7 @@ namespace Libra
 				ws.AddHeader("X-GEMINI-PAYLOAD", re.Headers["X-GEMINI-PAYLOAD"]);
 				ws.AddHeader("X-GEMINI-SIGNATURE", re.Headers["X-GEMINI-SIGNATURE"]);
 				ws.Connect();
+				sockets.Add(ws);
 			}
 			catch (Exception ex)
 			{
@@ -160,53 +163,51 @@ namespace Libra
 
 		private void OrderEventCallback(string data, object state)
 		{
-			/* This is likely caused by the serialization code below, and will be caught 
-			 * by Gemini.Websocket in the Receive() loop. If we end up here, the Websocket
-			 * connection is dead */
-			if (data == "Exception")
+			//try
 			{
-				var e = state as Exception;
-				Logger.WriteException(Logger.Level.Fatal, e);
-				return;
-			}
+				var pattern = "\"type\":\"\\w+\"";
+				var match = Regex.Match(data, pattern).Value;
 
-			var pattern = "\"type\":\"\\w+\"";
-			var match = Regex.Match(data, pattern).Value;
-
-			switch(match)
-			{
-				case "\"type\":\"subscription_ack\"":
-					return;
-				case "\"type\":\"heartbeat\"":
-					LastHeartbeat = data.Json<Heartbeat>().TimestampMs;
-					return;
-				default:
-					break;
-			}
-	
-
-			/* The default C# json parser is not good at mixed objects, and Gemini occasionally will send different
-			 * OrderEvent objects at the same time. So we need to do a big of regex to parse out what is what */
-			foreach (var item in data.TrimStart('[', '{').TrimEnd(']').Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries))
-			{
-				string clean = "{" + item + "}";
-				match = Regex.Match(clean, pattern).Value;
-				//System.Windows.Forms.MessageBox.Show(match);
-				switch(match)
+				switch (match)
 				{
-					case "\"type\":\"fill\"":
-						OrderChanged?.Invoke("fill", clean.Json<OrderEventFilled>());
-						break;
-					case "\"type\":\"cancelled\"":
-					case "\"type\":\"cancel_rejected\"":
-						OrderChanged?.Invoke("cancelled", clean.Json<OrderEventCancelled>());
-						break;
+					case "\"type\":\"subscription_ack\"":
+						return;
+					case "\"type\":\"heartbeat\"":
+						LastHeartbeat = data.Json<Heartbeat>().TimestampMs;
+						return;
 					default:
-						var obj = clean.Json<OrderEvent>();
-						OrderChanged?.Invoke(obj.Type, obj);
 						break;
 				}
+
+
+				/* The default C# json parser is not good at mixed objects, and Gemini occasionally will send different
+				 * OrderEvent objects at the same time. So we need to do a big of regex to parse out what is what */
+				foreach (var item in data.TrimStart('[', '{').TrimEnd(']').Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries))
+				{
+					string clean = "{" + item + "}";
+					match = Regex.Match(clean, pattern).Value;
+					//System.Windows.Forms.MessageBox.Show(match);
+					switch (match)
+					{
+						case "\"type\":\"fill\"":
+							OrderChanged?.Invoke("fill", clean.Json<OrderEventFilled>());
+							break;
+						case "\"type\":\"cancelled\"":
+						case "\"type\":\"cancel_rejected\"":
+							OrderChanged?.Invoke("cancelled", clean.Json<OrderEventCancelled>());
+							break;
+						default:
+							var obj = clean.Json<OrderEvent>();
+							OrderChanged?.Invoke(obj.Type, obj);
+							break;
+					}
+				}
 			}
+			//catch (Exception e)
+			//{
+			//	Logger.WriteException(Logger.Level.Fatal, e);
+			//	Logger.Write(Logger.Level.Info, data);
+			//}
 		}
 	}
 }
