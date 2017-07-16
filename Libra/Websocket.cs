@@ -34,52 +34,13 @@ namespace Libra
 		{
 			Parallel.ForEach(Symbols, s =>
 			{
-				LastTrades[s] = new MarketDataEvent() { Price = GeminiClient.GetLastPrice(s), };
-
-				PV[s] = 0;
-				V[s] = 0;
-
-				//System.Threading.ThreadPool.QueueUserWorkItem(
-				//delegate (object state)
-				new Task(() =>
-				{
-					var vwap = Vwap(s, DateTime.UtcNow.Subtract(new TimeSpan(24, 0, 0)).ToTimestamp(), DateTime.UtcNow.ToTimestamp());
-					PV[s] = vwap[0];
-					V[s] = vwap[1];
-				}).Start();
+				var t = GeminiClient.GetTicker(s);
+				LastTrades[s] = new MarketDataEvent() { Price = t.Last, };
+				PV[s] = t.Volume.Currency2;
+				V[s] = t.Volume.Currency1;
 			});
 
 			UpdateTicker(null, null);
-		}
-
-		/// <summary>
-		/// Calculate the VWAP for a period
-		/// </summary>
-		/// <param name="start">epoch timestamp for beginning period</param>
-		/// <param name="end">epoch timestamp for end period</param>
-		public static decimal[] Vwap(string currency, long start, long end)
-		{
-			long timestamp = start;
-			decimal pv = 0;
-			decimal v = 0;
-			TradeHistory[] history = null;
-			do
-			{
-				var result = Requests.Get(String.Format("https://api.gemini.com/v1/trades/{0}?limit_trades=500&since={1}", currency, timestamp)).Result;
-				if (!result.IsSuccessStatusCode)
-					throw new Exception("Bad response");
-
-				history = result.Json<TradeHistory[]>();
-				foreach (var trade in history)
-				{
-					pv += (trade.Price * trade.Amount);
-					v += trade.Amount;
-				}
-				timestamp = history[0].Timestamp;
-			} while (history.Length > 10 && (end - timestamp) > 10);
-
-			// add to the cumulative variables
-			return new decimal[] { pv, v};
 		}
 
 		public void MarketDataStart()
