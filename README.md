@@ -5,7 +5,7 @@ Donations:
 * BTC 12fj5Stp31SrYjtcN9T1jnXPGKUsEF92KD
 * ETH 0x2189b1E5C719093AbEFC1BE926fD92d23f4C52Fd
 
-<img src="https://github.com/lazear/Libra/blob/master/Libra.png" width="600"/>
+<img src="https://github.com/lazear/Libra/blob/master/Libra.png"/>
 
 ## Details:
 Libra is a C# GUI program providing access to the Gemini Exchange API, utilizing the open source C# [Gemini Library](https://github.com/lazear/Gemini).
