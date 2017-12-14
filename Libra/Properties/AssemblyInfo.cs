@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("LIBRA")]
 [assembly: AssemblyDescription("The open source user interface for the Gemini Exchange. This is free software. Free as in beer, free as in pizza, free as in speech.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("https://www.pleasehodl.me")]
+[assembly: AssemblyCompany("https://github.com/lazear/Libra")]
 [assembly: AssemblyProduct("LIBRA Gemini Client")]
 [assembly: AssemblyCopyright("Copyright © Michael Lazear 2017")]
 [assembly: AssemblyTrademark("Released under the MIT License")]

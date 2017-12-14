@@ -27,6 +27,7 @@ namespace Libra
 
 			/* Callback for API errors */
 			GeminiClient.InstallErrorHandler(ErrorHandler);
+			
 
 			/* Update runtime clock every second  */
 			runtime.Tick += UpdateRuntime;

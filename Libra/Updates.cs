@@ -86,6 +86,7 @@ namespace Libra
 				}
 					
 			}
+            this.UpdateOrders("PENDING", null);
 		}
 
 		/// <summary>
@@ -130,14 +131,21 @@ namespace Libra
 		/// <param name="e"></param>
 		private void UpdateOrders(string type, object data)
 		{
-			if (type == "PENDING")
-			{
+            TreeNode[] found;
 
-			}
+            // Handle "fake" order call, sent by application during refresh to check for pending orders,
+            // per issue #2. data will be null
+            if (type == "PENDING")
+			{
+                foreach (var n in OrderTracker.Pending)
+                {
+                    if ((found = treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false)).Count() == 0)
+                        treeOrders.Nodes["Pending"].Nodes.Add(n.ClientOrderID, n.ClientOrderID);
+                }
+                return;
+            }
 
 			var order = (OrderEvent)data;
-			TreeNode[] found;
-
 			if (type == "closed")
             {
               
@@ -161,7 +169,6 @@ namespace Libra
 			else if (type == "cancelled")
 			{
 				var cancel = (OrderEventCancelled)data;
-
 				/* 
 				 * Our stop orders are placed as immediate or cancel. 
 				 * We will resubmit it at a slightly worse price, and try again until it succeeds 
@@ -183,12 +190,10 @@ namespace Libra
 						GeminiClient.PlaceOrder(request);
 					}
 				}
-
-
 			}
 			else if (type == "booked" || type == "initial")
 			{
-				// Remove existing node
+				// Remove existing node from Pending, move it to Active
 				if ((found = treeOrders.Nodes["Pending"].Nodes.Find(order.ClientOrderID, false)).Count() > 0)
 					found.First().Remove();
 
@@ -200,16 +205,7 @@ namespace Libra
 				order = (OrderEventFilled)data;
 				OrderTracker.Orders[order.OrderID] = order;
 			}
-
-
-			foreach (var n in OrderTracker.Pending)
-			{
-				if ((found = treeOrders.Nodes["Pending"].Nodes.Find(n.ClientOrderID, false)).Count() > 0)
-					found.First().Remove();
-				treeOrders.Nodes["Pending"].Nodes.Add(n.ClientOrderID, n.ClientOrderID);
-			}
-
-			UpdateAccounts(null, null);
+            UpdateAccounts(null, null);
 		}
 	}
 }

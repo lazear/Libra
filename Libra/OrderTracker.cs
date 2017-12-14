@@ -39,8 +39,7 @@ namespace Libra
 		public static void CheckPendingOrders(string currency, MarketDataEvent data)
 		{
 			Parallel.ForEach(Pending, order =>
-			{
-				
+			{				
 				var price = decimal.Parse(order.Price);
 				if (order.Symbol == currency)
 				{

@@ -97,7 +97,7 @@ namespace Libra
 			}
 			try
 			{
-				var market = data.Json<MarketData>();
+				var market = Regex.Match(data, ".*}]}").Value.Json<MarketData>();
 				
 				if (market.Type == "update")
 				{
